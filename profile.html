@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-avatar">
+            <i class="fa-regular fa-user"></i>
+        </div>
+        <h2 id="profileUsername">Username</h2>
+        <div class="profile-info">
+            <div class="profile-info-row">
+                <label>العنوان:</label>
+                <span id="profileAddress">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label>رقم الطالب:</label>
+                <span id="profilePhone">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label>رقم ولي الأمر:</label>
+                <span id="profileFatherPhone">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label>المرحلة:</label>
+                <span id="profileStage">---</span>
+            </div>
+        </div>
+        <div class="profile-table-title">امتحاناتك السابقة</div>
+        <table class="profile-table">
+            <thead>
+                <tr>
+                    <th>اسم الامتحان</th>
+                    <th>النتيجة</th>
+                    <th>أخطاءك</th>
+                </tr>
+            </thead>
+            <tbody id="examsTable">
+                <tr>
+                    <td>Math Midterm</td>
+                    <td>45 / 50</td>
+                    <td>❌ خطأ في السؤال 3<div>❌ خطأ في السؤال 5</div></td>
+                </tr>
+                <tr>
+                    <td>Physics Quiz</td>
+                    <td>18 / 20</td>
+                    <td><span style='color:green'>كل الإجابات صحيحة!</span></td>
+                </tr>
+                <tr>
+                    <td>English Final</td>
+                    <td>38 / 40</td>
+                    <td>❌ خطأ في السؤال 2</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // بيانات تجريبية - يمكنك ربطها بـ localStorage أو قاعدة بياناتك
+        const userData = {
+            username: localStorage.getItem('username') || 'Student Name',
+            address: 'المنصورة, مصر',
+            phone: '01012345678',
+            fatherPhone: '01087654321',
+            stage: 'ثانوية عامة'
+        };
+        document.getElementById('profileUsername').textContent = userData.username;
+        document.getElementById('profileAddress').textContent = userData.address;
+        document.getElementById('profilePhone').textContent = userData.phone;
+        document.getElementById('profileFatherPhone').textContent = userData.fatherPhone;
+        document.getElementById('profileStage').textContent = userData.stage;
+
+        // عرض نتائج الامتحانات من localStorage
+        const examsTable = document.getElementById('examsTable');
+        const examHistory = JSON.parse(localStorage.getItem('examHistory') || "[]");
+        if (examHistory.length) {
+          examsTable.innerHTML = examHistory.map(e =>
+            `<tr>
+              <td>${e.examName}</td>
+              <td>${e.score}</td>
+              <td>${e.mistakes.length ? e.mistakes.map(m => `<div>❌ ${m}</div>`).join('') : "<span style='color:green'>كل الإجابات صحيحة!</span>"}</td>
+            </tr>`
+          ).join('');
+        } else {
+          examsTable.innerHTML = `<tr><td colspan="3">لا يوجد امتحانات بعد</td></tr>`;
+        }
+    </script>
+</body>
+</html>

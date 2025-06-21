@@ -1,0 +1,806 @@
+/* style.css */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #e0f2f7; /* Light blue-gray background */
+    color: #1a237e; /* Dark blue text */
+}
+
+header {
+    background-color: #2196f3; /* Blue header */
+    color: white;
+    padding: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 100;
+}
+
+.logo-pic-container {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
+}
+.pic img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 0;
+    transition: transform 1s cubic-bezier(.68,-0.55,.27,1.55);
+}
+.pic img:hover {
+    transform: rotate(360deg);
+}
+
+div img{
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 50%;
+    margin-left: 0px;
+    position: relative;
+}
+.logo + div img {
+    position: absolute;
+    left: 182px;
+    top: 5px;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+.logo + div img:hover {
+    transform: rotate(360deg);
+    transition: transform 1s;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav li {
+    margin-left: 2.5rem;
+    font-weight: 350;
+    font-size: 1.1em;
+
+
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+nav a:hover {
+    color: #bbdefb; /* Lighter blue on hover */
+}
+#about p{
+    text-wrap:left; 
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    animation: fadeInUp 1.2s ease; /* Fade-in up animation with delay */
+}
+
+
+.hero {
+    text-align: center;
+    padding: 100px 0;
+    
+}
+
+.hero h1 {
+    font-size: 2.8em;
+    font-weight: bold;
+    color:white;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+    transition: color 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.hero h1:hover {
+    color: #111;
+    transition: color 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #1976d2; /* Darker blue button */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease; /* Smooth background transition */
+    animation: fadeInUp 1.2s cubic-bezier(.68,-0.55,.27,1.55) 0.5s both; /* نفس أنيميشن زرار about مع تأخير */
+}
+
+.cta-button:hover {
+    background-color: #1565c0; /* Even darker blue on hover */
+}
+
+section {
+    padding: 40px;
+    background-color: white; /* White section background */
+    margin-bottom: 20px;  /* Space between sections */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    opacity: 0; /* Initially hidden */
+    transform: translateY(20px); /* Slightly moved down */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transitions */
+}
+
+section.active { /* Class added by JavaScript when section is in viewport */
+    opacity: 1;
+    transform: translateY(0);
+}
+.teacher-info {
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    margin: 20px 10px;
+    flex-wrap: wrap;
+}
+
+.teacher1 img, 
+.teacher2 img,
+.teacher3 img{
+    width: 11rem;
+    height: 11rem;
+    border-radius: 50%;
+}
+
+/* wrong and want to edit to be responsive */
+.exclusive-img{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+.new-teacher .exclusive-img img {
+    width: 330px;
+    height: 170px;
+    border-radius: 10%;
+}
+.exclusives{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px 10px;
+    flex-wrap: wrap;
+}
+ .exclusive-teacher1 img,
+ .exclusive-teacher2 img,
+ .exclusive-teacher3 img,
+ .exclusive-teacher4 img{
+    width: 18.5rem;
+    height: 18.5rem;
+    border-radius: 10px;
+    margin-top: 10px;
+} 
+.exclusive-teacher1 img:hover,
+.exclusive-teacher2 img:hover,
+.exclusive-teacher3 img:hover,
+.exclusive-teacher4 img:hover{
+    filter: grayscale(70%);
+ transition: filter 0.5s, transform 0.5s;
+    transform: scale(1.1);
+}
+
+h2 {
+    color: #087cdb; /* Dark blue headings */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 20px;
+}
+
+.course {
+    border: 1px solid #393d95;
+    padding: 40px;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.course:hover {
+    transform: translateY(-5px); /* Move up slightly on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
+}
+
+.course h3 {
+    margin-bottom: 10px;
+}
+
+.course-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2196f3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.course-button:hover {
+    background-color: #1976d2;
+}
+#contact a{
+    text-decoration: none;
+    color: #1a237e;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    animation: fadeInUp 1.2s ease; /* Fade-in up animation with delay */
+    font-size: 1.2em;
+}
+
+/* Contact Us Section Styling */
+#contact {
+  background: linear-gradient(120deg, #e0f7fa 60%, #bbdefb 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #2196f340;
+  padding: 12px 8px 8px 8px;      /* تقليل البادينج */
+  margin: 18px auto 12px auto;    /* تقليل المسافة */
+  max-width: 400px;
+  min-height: unset;              /* لا يوجد ارتفاع إجباري */
+}
+
+#contact h2 {
+  color: #1976d2;
+  text-align: center;
+  margin-bottom: 10px;            /* تقليل المسافة */
+  letter-spacing: 1px;
+  font-size: 1.1em;               /* تصغير الخط */
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 8px;
+}
+
+.contact-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.95em;
+  color: #1976d2;
+  background: #fff;
+  border-radius: 16px;
+  padding: 5px 10px;
+  margin: 0;
+  box-shadow: 0 1px 4px #2196f320;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, transform 0.18s;
+  position: relative;
+}
+
+.contact-info a i {
+  font-size: 1em;
+  margin-right: 3px;
+  transition: color 0.2s;
+}
+
+.contact-info a:hover {
+  background: linear-gradient(90deg, #2196f3 60%, #6dd5ed 100%);
+  color: #fff;
+  transform: scale(1.06) translateY(-2px);
+}
+
+/* تخصيص لون الأيقونة عند الهوفر حسب نوع الرابط */
+.contact-info a[href^="tel"]:hover i {
+  color: #25d366; /* أخضر */
+}
+.contact-info a[href*="facebook"]:hover i {
+  color: #1877f3; /* أزرق فيسبوك */
+}
+.contact-info a[href*="wa.me"]:hover i {
+  color: #25d366; /* أخضر واتساب */
+}
+.contact-info a[href*="instagram"]:hover i {
+  color: #c32aa3; /* بنفسجي انستجرام */
+}
+.contact-info a[href*="telegram"]:hover i {
+  color: #0937b5; /* أزرق  */
+}
+
+.contact-info p {
+  flex-basis: 88%;
+  margin: 4px 0 0 0;
+  color: #333;
+  font-size: 0.93em;
+  text-align: center;
+  background: #f5faff;
+  border-radius: 8px;
+  padding: 4px 6px;
+  box-shadow: 0 1px 4px #2196f310;
+}
+
+/* احذف أي <br> بين الروابط في index.html ليظهروا بجانب بعض */
+footer {
+    background-color: #2196f3;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+/* Animations */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+    from {
+        opacity: 0;
+    }
+}
+
+/* Responsive Design */
+.teacher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto)
+}
+.user-menu {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  margin-left: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.08em;
+  z-index: 200;
+}
+.user-name-nav {
+  padding: 8px 18px;
+  border-radius: 18px;
+  background: #2196f3;
+  outline: 2px solid rgba(0, 0, 0, 0.491);
+  color: #fff;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
+}
+.user-name-nav:hover,
+.user-menu:focus-within .user-name-nav {
+  background: #6dd5ed;
+  color: #1e3c72;
+}
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: #fff;
+  color: #0059ff;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px 0 rgba(30,60,114,0.13);
+  min-width: 180px;
+  z-index: 200;
+  flex-direction: column;
+  padding: 8px 0;
+  animation: fadeInDown 0.4s;
+}
+.user-dropdown a {
+  color: #1e3c72;
+  text-decoration: none;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+  font-size: 1em;
+}
+.user-dropdown a:hover {
+  background: #e0f2f7;
+}
+.user-menu:focus-within .user-dropdown,
+.user-name-nav:hover + .user-dropdown,
+.user-menu:hover .user-dropdown {
+  display: flex;
+}
+/* زرار الدارك مود */
+#darkModeToggle {
+  background: linear-gradient(135deg, #1e3c72 60%, #6dd5ed 100%);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  width: 3.1rem;
+  height: 2.5rem;
+  margin-left: 1.4rem;
+  cursor: pointer;
+  font-size: 1.3em;
+  box-shadow: 0 2px 10px #1e3c7240;
+  transition: background 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+#darkModeToggle:hover {
+  background: linear-gradient(135deg, #6dd5ed 60%, #1e3c72 100%);
+  transform: scale(1.08) rotate(-10deg);
+}
+#darkIcon {
+  transition: transform 0.5s cubic-bezier(.68,-0.55,.27,1.55), color 0.3s;
+  font-size: 1.5em;
+  will-change: transform;
+}
+body.dark-mode #darkIcon {
+  transform: rotate(-180deg) scale(1.2);
+  color: #ffd700;
+  text-shadow: 0 0 8px #ffd70099;
+}
+
+/* ستايل الدارك مود */
+body.dark-mode {
+    background: linear-gradient(135deg, #1A237E 0%, #030405 100%);
+  color: #e0e0e0;
+}
+body.dark-mode header,
+body.dark-mode nav,
+body.dark-mode .hero,
+body.dark-mode section,
+body.dark-mode footer {
+  background: transparent !important;
+  color: #e0e0e0 !important;
+}
+body.dark-mode .course,
+body.dark-mode .teacher1,
+body.dark-mode .teacher2,
+body.dark-mode .teacher3,
+body.dark-mode .exclusive-teacher1,
+body.dark-mode .exclusive-teacher2,
+body.dark-mode .exclusive-teacher3 {
+  background: rgba(30,60,114,0.18) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 24px 0 #1e3c7240;
+}
+body.dark-mode .cta-button,
+body.dark-mode .course-button {
+  background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  color: #fff;
+  border: none;
+}
+body.dark-mode .cta-button:hover,
+body.dark-mode .course-button:hover {
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  color: #fff;
+}
+body.dark-mode nav ul li a {
+  color: #e0e0e0 !important;
+}
+body.dark-mode nav ul li a:hover {
+  color: #6dd5ed !important;
+}
+body.dark-mode .logo {
+  color: #6dd5ed !important;
+}
+body.dark-mode .pic img {
+  filter: grayscale(0.3) brightness(0.8);
+}
+body.dark-mode .social-icon {
+  color: #6dd5ed !important;
+}
+body.dark-mode footer {
+  background: transparent !important;
+  color: #6dd5ed !important;
+}
+
+.offers-flip-cards {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin: 18px 0 10px 0;
+  flex-wrap: wrap;
+}
+.flip-card {
+  background: transparent;
+  width: 120px;
+  height: 140px;
+  perspective: 700px;
+}
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+  transform-style: preserve-3d;
+}
+.flip-card:hover .flip-card-inner,
+.flip-card:focus .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #2196f320;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.flip-card-front {
+  background: linear-gradient(120deg, #e0f7fa 60%, #bbdefb 100%);
+  color: #1976d2;
+  font-size: 1.1em;
+  font-weight: 600;
+  gap: 8px;
+}
+.flip-card-front i {
+  font-size: 2.2em;
+  margin-bottom: 8px;
+  color: #2a65dc;
+}
+.flip-card-back {
+  background: #fff;
+  color: #333;
+  transform: rotateY(180deg);
+  font-size: 1em;
+  padding: 12px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.type-slider {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.slider-tab {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 22px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.slider-tab.active {
+    background: #1976d2;
+    color: #fff;
+}
+@media (max-width: 600px) {
+  #contact {
+    padding: 7px 1vw 7px 1vw;
+    max-width: 98vw;
+  }
+  .contact-info {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+  }
+  .contact-info a {
+    font-size: 0.93em;
+    padding: 5px 7px;
+  }
+  .contact-info p {
+    font-size: 0.91em;
+    padding: 3px 3px;
+  }
+}
+@media (max-width: 1024px) {
+    nav {
+        flex-direction: column; /* Stack navigation vertically */
+        align-items: initial;
+    }
+    nav ul {
+        flex-direction: column; /* Stack list items vertically */
+        margin-top: 10px;
+    }
+    nav li {
+        margin: 20px 0;
+    }
+    .course-grid {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+    }
+    #darkModeToggle {
+        position: absolute;
+        top: 1rem ;
+        right: 1rem;
+    }
+}
+
+.one_theth {
+  display: flex;  
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+.one_theth h3 {
+  margin: 0;
+}
+.one_theth p {
+  margin: 0;
+}
+.courses-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    margin: 24px 0 0 0;
+}
+.course-dropdown {
+    position: relative;
+}
+.course-btn {
+    background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 16px;
+    padding: 12px 32px;
+    font-size: 1.08em;
+    cursor: pointer;
+    box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+    transition: background 0.2s, transform 0.2s;
+}
+.course-btn:hover, .course-btn.active {
+    background: #1976d2;
+    color: #fff;
+    transform: scale(1.04);
+}
+.dropdown-list {
+    display: none;
+    position: absolute;
+    bottom: 110%;      /* بدل top: 110%; */
+    left: 0;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px #2196f340;
+    padding: 18px 22px 12px 22px;
+    min-width: 180px;
+    z-index: 100;
+    flex-direction: column;
+    gap: 10px;
+}
+.course-dropdown.open .dropdown-list {
+    display: flex;
+}
+.dropdown-list label {
+    display: flex;
+    flex-direction: column;
+    color: #1976d2;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1em;
+}
+.dropdown-list select {
+    margin-top: 4px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #6dd5ed;
+}
+.filtered-teachers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    margin-top: 18px;
+    transition: opacity 0.3s;
+}
+.show-teachers-btn {
+    margin: 12px auto 0 auto;
+    display: block;
+    background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    padding: 10px 32px;
+    font-size: 1.08em;
+    cursor: pointer;
+    box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+    transition: background 0.2s, transform 0.2s;
+}
+.show-teachers-btn:hover {
+    background: #1976d2;
+    color: #fff;
+    transform: scale(1.04);
+}
+.filtered-teachers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    margin-top: 18px;
+    transition: opacity 0.3s;
+}
+.teacher-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px #2196f320;
+    padding: 14px 10px 10px 10px;
+    text-align: center;
+    width: 110px;
+    transition: transform 0.2s;
+}
+.teacher-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 2px solid #6dd5ed;
+}
+.teacher-card h4 {
+    margin: 0;
+    font-size: 1em;
+    color: #1976d2;
+    font-weight: 700;
+}
+.filtered-teachers .no-result {
+    color: #d32f2f;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin: 18px 0;
+    width: 100%;
+    text-align: center;
+}
+.teachers-nav button {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 0 4px;
+    transition: background 0.2s, color 0.2s;
+}
+.teachers-nav button:disabled {
+    background: #bbdefb;
+    color: #90a4ae;
+    cursor: not-allowed;
+}
+.close-teachers-list {
+    color: #d32f2f;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+.close-teachers-list:hover {
+    color: #b71c1c;
+}

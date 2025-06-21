@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Books Library</title>
+  <link rel="stylesheet" href="book.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/358045773_695100129297630_6681247707211595226_n.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body>
+
+  <section class="library-section">
+    <h1 class="library-title">📚 Books Library</h1>
+    <p class="library-subtitle">Explore our best educational books!</p>
+
+  <div class="search-bar-container">
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <i class="fa fa-search"></i>
+  </div>
+
+    <div class="book-grid">
+
+      <div class="book-card">
+        <img src="images/يخصىمخشيس2.jpeg" alt="Book 1">
+        <h3>Mathematics Mastery</h3>
+        <p>500 L.E</p>
+        
+        <a href="#" class="book-btn">buy now</a>
+      </div>
+
+      <div class="book-card">
+        <img src="images/images1.jpeg" alt="Book 2">
+        <h3>Physics in Action</h3>
+        <p>150 L.E</p>
+        <a href="#" class="book-btn">buy now</a>
+      </div>
+
+      <div class="book-card">
+        <img src="images/IMAGES2.jpeg" alt="Book 3">
+        <h3>English Grammar Pro</h3>
+        <p>325 L.E</p>
+        <a href="#" class="book-btn">buy now</a>
+      </div>
+
+      <div class="book-card">
+        <img src="images/download1.jpeg" alt="Book 4">
+        <h3>Biology Secrets</h3>
+        <p>665 L.E</p>
+        <a href="#" class="book-btn">buy now</a>
+      </div>
+        <div class="book-card">
+            <img src="images/يخصىمخشيس2.jpeg" alt="Book 5">
+            <h3>elsherbini code</h3>
+            <p>300 L.E</p>
+            <a href="#" class="book-btn">buy now</a>
+        </div>
+
+    </div>
+  </section>
+
+  <div id="buyModal" class="buy-modal">
+    <div class="buy-modal-content">
+      <span class="buy-close" id="closeBuyModal">&times;</span>
+      <h2 class="buy-title">شراء الكتب او الاكواد</h2>
+      <div class="buy-info">
+        <p class="buy-number">تقدر تشتري او تحجز من السنتر رقم فودافون كاش: <b>01012345678</b></p>
+        <p class="buy-whatsapp">بعد التحويل ابعت صورة الإيصال على <a href="https://wa.me/201012345678" target="_blank">واتساب</a></p>
+      </div>
+      <div class="buy-anim">
+        <span class="money-emoji">💸</span>
+        <span class="money-emoji">💸</span>
+        <span class="money-emoji">💸</span>
+        <!-- <span style="font-size:1.2em; margin-left:10px;">تمت عملية الشراء بنجاح!</span> -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // فتح المودال عند الضغط على buy now
+    document.querySelectorAll('.book-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('buyModal').style.display = 'flex';
+        setTimeout(() => {
+          document.querySelector('.buy-modal-content').classList.add('show');
+        }, 10);
+      });
+    });
+
+    // غلق المودال
+    document.getElementById('closeBuyModal').onclick = function() {
+      document.querySelector('.buy-modal-content').classList.remove('show');
+      setTimeout(() => {
+        document.getElementById('buyModal').style.display = 'none';
+      }, 350);
+    };
+
+    // اغلاق عند الضغط خارج المودال
+    window.onclick = function(e) {
+      if (e.target == document.getElementById('buyModal')) {
+        document.querySelector('.buy-modal-content').classList.remove('show');
+        setTimeout(() => {
+          document.getElementById('buyModal').style.display = 'none';
+        }, 350);
+      }
+    };
+
+  // يعمل على تصفية الكتب حسب العنوان أثناء الكتابة في شريط البحث
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const val = this.value.toLowerCase();
+    document.querySelectorAll('.book-card').forEach(card => {
+      const title = card.querySelector('h3').textContent.toLowerCase();
+      card.style.display = title.includes(val) ? '' : 'none';
+    });
+  });
+  </script>
+</body>
+</html>

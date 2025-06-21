@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Videos</title>
+  <link rel="stylesheet" target="_" href="dashboard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../knowledge/images/358045773_695100129297630_6681247707211595226_n.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body class="dashboard-page">
+
+  <header class="dashboard-header">
+    <h1 class="dash-title">🎬 Knowledge Dashboard</h1>
+    <p class="dash-subtitle">All your course resources in one place</p>
+  </header>
+
+  <!-- السلايدر العلوي -->
+  <div class="dashboard-slider">
+    <button class="slider-tab active" id="videosTab">Videos</button>
+    <button class="slider-tab" id="examsTab">Exams & Sheets</button>
+  </div>
+
+  <!-- سيرش بار مشترك -->
+  <div class="search-bar-container">
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <i class="fa fa-search"></i>
+  </div>
+
+  <!-- قسم الفيديوهات -->
+  <section class="video-grid" id="videosSection">
+    <div class="video-card fade-in-up">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
+      <h3>Math Lecture 1</h3>
+    </div>
+    <div class="video-card fade-in-up delay-1">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+      <h3>Physics - Waves</h3>
+    </div>
+    <div class="video-card fade-in-up delay-2">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>
+      <h3>Biology - Cell Division</h3>
+    </div>
+    <div class="video-card fade-in-up delay-3">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID_4" frameborder="0" allowfullscreen></iframe>
+      <h3>Chemistry - Acids and Bases</h3>
+    </div>
+    <div id="codeModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModal">&times;</span>
+    <h3>ادخل الكود لفتح الفيديو</h3>
+    <input type="text" id="videoCodeInput" placeholder="ادخل الكود هنا">
+    <button id="submitCode">فتح الفيديو</button>
+    <p id="codeError" style="color:red;display:none;">الكود غير صحيح!</p>
+  </div>
+  <script>
+  // الكود الصحيح (غيره حسب رغبتك)
+  const correctCode = "1234";
+  let currentVideo = null;
+
+  // اجعل كل فيديو كارد يفتح المودال
+  document.querySelectorAll('.video-card').forEach(card => {
+    card.addEventListener('click', function() {
+      currentVideo = this.querySelector('iframe');
+      document.getElementById('codeModal').style.display = 'block';
+      document.getElementById('videoCodeInput').value = '';
+      document.getElementById('codeError').style.display = 'none';
+      if(currentVideo) currentVideo.style.pointerEvents = "none";
+    });
+  });
+
+  // غلق المودال
+  document.getElementById('closeModal').onclick = function() {
+    document.getElementById('codeModal').style.display = 'none';
+  };
+
+  // عند الضغط على زر فتح الفيديو
+  document.getElementById('submitCode').onclick = function() {
+    const userCode = document.getElementById('videoCodeInput').value;
+    if(userCode === correctCode) {
+      document.getElementById('codeModal').style.display = 'none';
+      if(currentVideo) currentVideo.style.pointerEvents = "auto";
+    } else {
+      document.getElementById('codeError').style.display = 'block';
+    }
+  };
+
+  // اغلاق المودال عند الضغط خارج المحتوى
+  window.onclick = function(event) {
+    if (event.target == document.getElementById('codeModal')) {
+      document.getElementById('codeModal').style.display = 'none';
+    }
+  };
+</script>
+</div>
+    <!-- تقدر تزود فيديوهات تانية بنفس الشكل -->
+  </section>
+
+  <!-- قسم الامتحانات والورق -->
+  <section class="exams-section" id="examsSection" style="display:none;">
+    <div class="exam-card fade-in-up">
+      <h3>Math Exam 1</h3>
+      <a href="exams/math_exam1.pdf" target="_blank" class="btn-animate">Download PDF</a>
+    </div>
+    <div class="exam-card fade-in-up">
+      <h3>Physics Sheet 1</h3>
+      <a href="exams/physics_sheet1.pdf" target="_blank" class="btn-animate">Download PDF</a>
+    </div>
+    <div class="exam-card fade-in-up" id="onlineExamCard">
+  <h3>Math MCQ Online Exam</h3>
+  <button class="btn-animate" id="startExamBtn"><i class="fas fa-play"></i> Start Online Exam</button>
+</div>
+
+<!-- مودال الامتحان الأونلاين -->
+<div id="onlineExamModal" class="modal">
+  <div class="modal-content exam-modal-content">
+    <span class="close" id="closeExamModal">&times;</span>
+    <h3>Math MCQ Online Exam</h3>
+    <div id="examTimer" style="font-weight:700;color:#d32f2f;margin-bottom:10px;">Time: <span id="timerVal">02:00</span></div>
+    <form id="mcqExamForm">
+      <div class="mcq-question" data-correct="b">
+        <p>1. What is 2 + 2?</p>
+        <label><input type="radio" name="q1" value="a" required> 3</label><br>
+        <label><input type="radio" name="q1" value="b"> 4</label><br>
+        <label><input type="radio" name="q1" value="c"> 5</label>
+      </div>
+      <div class="mcq-question" data-correct="c">
+        <p>2. The capital of Egypt is?</p>
+        <label><input type="radio" name="q2" value="a" required> Alexandria</label><br>
+        <label><input type="radio" name="q2" value="b"> Mansoura</label><br>
+        <label><input type="radio" name="q2" value="c"> Cairo</label>
+      </div>
+      <div class="mcq-question" data-correct="a">
+        <p>3. Which is a prime number?</p>
+        <label><input type="radio" name="q3" value="a" required> 7</label><br>
+        <label><input type="radio" name="q3" value="b"> 8</label><br>
+        <label><input type="radio" name="q3" value="c"> 9</label>
+      </div>
+      <button type="submit" class="btn-animate" id="submitExamBtn">Submit</button>
+    </form>
+    <div id="examResult" style="display:none;margin-top:18px;">
+      <h4>Result: <span id="scoreVal"></span></h4>
+      <div id="mistakesList"></div>
+      <button class="btn-animate" onclick="document.getElementById('onlineExamModal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+    <!-- ... أضف المزيد حسب الحاجة ... -->
+  </section>
+
+  <script>
+    // Tabs functionality
+    const videosTab = document.getElementById('videosTab');
+    const examsTab = document.getElementById('examsTab');
+    const videosSection = document.getElementById('videosSection');
+    const examsSection = document.getElementById('examsSection');
+    const searchInput = document.getElementById('searchInput');
+
+    videosTab.onclick = function() {
+      videosTab.classList.add('active');
+      examsTab.classList.remove('active');
+      videosSection.style.display = '';
+      examsSection.style.display = 'none';
+      searchInput.placeholder = "Search videos...";
+    };
+    examsTab.onclick = function() {
+      examsTab.classList.add('active');
+      videosTab.classList.remove('active');
+      examsSection.style.display = '';
+      videosSection.style.display = 'none';
+      searchInput.placeholder = "Search exams or sheets...";
+    };
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+      const val = this.value.toLowerCase();
+      if (videosSection.style.display !== 'none') {
+        document.querySelectorAll('.video-card').forEach(card => {
+          card.style.display = card.textContent.toLowerCase().includes(val) ? '' : 'none';
+        });
+      } else {
+        document.querySelectorAll('.exam-card').forEach(card => {
+          card.style.display = card.textContent.toLowerCase().includes(val) ? '' : 'none';
+        });
+      }
+    });
+
+    // Online exam functionality
+    const startExamBtn = document.getElementById('startExamBtn');
+    const onlineExamModal = document.getElementById('onlineExamModal');
+    const closeExamModal = document.getElementById('closeExamModal');
+    const mcqExamForm = document.getElementById('mcqExamForm');
+    const examResult = document.getElementById('examResult');
+    const scoreVal = document.getElementById('scoreVal');
+    const mistakesList = document.getElementById('mistakesList');
+    const timerVal = document.getElementById('timerVal');
+    let timerInterval, timeLeft = 120;
+
+    if (startExamBtn) {
+      startExamBtn.onclick = function() {
+        onlineExamModal.style.display = 'block';
+        examResult.style.display = 'none';
+        mcqExamForm.style.display = '';
+        mcqExamForm.reset();
+        timeLeft = 120;
+        timerVal.textContent = "02:00";
+        startTimer();
+      };
+    }
+    if (closeExamModal) {
+      closeExamModal.onclick = function() {
+        onlineExamModal.style.display = 'none';
+        clearInterval(timerInterval);
+      };
+    }
+    window.onclick = function(event) {
+      if (event.target == onlineExamModal) {
+        onlineExamModal.style.display = 'none';
+        clearInterval(timerInterval);
+      }
+    };
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        let min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        let sec = String(timeLeft % 60).padStart(2, '0');
+        timerVal.textContent = `${min}:${sec}`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          submitExam(true);
+        }
+      }, 1000);
+    }
+
+    mcqExamForm.onsubmit = function(e) {
+      e.preventDefault();
+      submitExam(false);
+    };
+
+    function submitExam(isTimeout) {
+      clearInterval(timerInterval);
+      let total = 3, score = 0, mistakes = [];
+      const questions = mcqExamForm.querySelectorAll('.mcq-question');
+      questions.forEach((q, idx) => {
+        const correct = q.getAttribute('data-correct');
+        const name = `q${idx+1}`;
+        const checked = mcqExamForm.querySelector(`input[name="${name}"]:checked`);
+        if (checked && checked.value === correct) {
+          score++;
+        } else {
+          let qText = q.querySelector('p').textContent;
+          mistakes.push(qText);
+        }
+      });
+      mcqExamForm.style.display = 'none';
+      examResult.style.display = '';
+      scoreVal.textContent = `${score} / ${total}` + (isTimeout ? " (Time Out)" : "");
+      mistakesList.innerHTML = mistakes.length ? `<b>أخطاءك:</b><br>${mistakes.map(e => "❌ " + e).join('<br>')}` : "<span style='color:green'>كل الإجابات صحيحة!</span>";
+
+      // حفظ النتيجة في localStorage
+      const examHistory = JSON.parse(localStorage.getItem('examHistory') || "[]");
+      examHistory.push({
+        examName: "Math MCQ Online Exam",
+        score: `${score} / ${total}` + (isTimeout ? " (Time Out)" : ""),
+        mistakes: mistakes
+      });
+      localStorage.setItem('examHistory', JSON.stringify(examHistory));
+    }
+  </script>
+</body>
+</html>

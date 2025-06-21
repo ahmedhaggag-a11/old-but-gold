@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Knowledge Center</title>
+    <link rel="stylesheet" href="register.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/358045773_695100129297630_6681247707211595226_n.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <h2 class="fade-in">Create your account</h2>
+    <form action="قثلهسفثقزؤسس" method="POST" class="form-animate">
+      <div class="input-group">
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="first_name" placeholder="First Name" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <input type="text" name="last_name" placeholder="Last Name" required class="input-animate"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="student_id" placeholder="Student Number" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <input type="text" name="national_id" id="nationalId" placeholder="National ID" required class="input-animate"/>
+            <div id="nationalIdError" class="error-message" style="display:none;color:#d32f2f;font-size:0.9em;margin-top:4px;"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="parent_phone" placeholder="Parent Phone Number" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" placeholder="Email" required class="input-animate"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="address" placeholder="Address" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <select name="academic_year" required class="input-animate">
+              <option value="" disabled selected>Choose the grade</option>
+              <option value="secondary">Secondary</option>
+              <option value="preparatory">Preparatory</option>
+              <option value="primary">Primary</option>
+              <option value="azhari">Azhari</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="position:relative;">
+            <input type="text" name="username" id="username" placeholder="Username" required class="input-animate" autocomplete="off"/>
+            <div id="usernameError" class="error-message" style="display:none;color:#d32f2f;font-size:0.9em;margin-top:4px;"></div>
+            <div id="usernameSuggestions" style="display:none;position:absolute;top:100%;left:0;width:100%;background:#fff;border:1px solid #90caf9;border-radius:8px;z-index:10;font-size:0.98em;"></div>
+          </div>
+          <div class="form-group">
+            <label style="margin-bottom:4px;display:block;font-size:0.98em;color:#1976d2;">Gender</label>
+            <label style="margin-right:12px;">
+              <input type="radio" name="gender" value="male" required> Male
+            </label>
+            <label>
+              <input type="radio" name="gender" value="female" required> Female
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group password-wrapper">
+            <input type="password" name="password" id="password" placeholder="Password" required class="input-animate"/>
+            <span class="toggle-password">
+              <i class="fa-regular fa-eye" id="togglePassword"></i>
+            </span>
+          </div>
+          <div class="form-group password-wrapper">
+            <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm Password" required class="input-animate"/>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn-animate">Register</button>
+      <p class="register-link">Already have an account? <a href="login.html">Login here</a></p>
+    </form>
+  </div>
+  <script>
+    // إظهار/إخفاء الباسورد
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    togglePassword.addEventListener('click', function () {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // قائمة أرقام قومية مسجلة بالفعل (مثال تجريبي، في الحقيقة يجب جلبها من الباك إند)
+    const existingNationalIds = ["12345678901234", "29801010123456"];
+
+    const nationalIdInput = document.getElementById('nationalId');
+    const nationalIdError = document.getElementById('nationalIdError');
+    const form = document.querySelector('form');
+
+    nationalIdInput.addEventListener('input', function() {
+      const val = nationalIdInput.value.trim();
+      let error = "";
+      if (!/^\d{14}$/.test(val)) {
+        error = "National ID must be exactly 14 digits.";
+      } else if (existingNationalIds.includes(val)) {
+        error = "This National ID is already registered.";
+      }
+      nationalIdError.textContent = error;
+      nationalIdError.style.display = error ? "block" : "none";
+      nationalIdInput.style.borderColor = error ? "#d32f2f" : "";
+    });
+
+    // قائمة يوزرنيمات مسجلة بالفعل (مثال تجريبي)
+    const existingUsernames = ["ahmed123", "student2024", "mona_ali"];
+
+    const usernameInput = document.getElementById('username');
+    const usernameError = document.getElementById('usernameError');
+    const usernameSuggestions = document.getElementById('usernameSuggestions');
+    const firstNameInput = document.querySelector('input[name="first_name"]');
+    const lastNameInput = document.querySelector('input[name="last_name"]');
+
+    function generateSuggestions(base) {
+      const baseClean = base.replace(/\s+/g, '').toLowerCase();
+      let suggestions = [];
+      if (!baseClean) return [];
+      for (let i = 0; i < 5; i++) {
+        let suggestion = baseClean;
+        if (i === 1) suggestion += Math.floor(Math.random() * 1000);
+        if (i === 2) suggestion += "_" + (lastNameInput ? lastNameInput.value.toLowerCase() : "");
+        if (i === 3) suggestion += (new Date().getFullYear() % 100);
+        if (i === 4) suggestion += Math.floor(Math.random() * 900 + 100);
+        if (!existingUsernames.includes(suggestion) && !suggestions.includes(suggestion) && suggestion.length > 3) {
+          suggestions.push(suggestion);
+        }
+      }
+      return suggestions;
+    }
+
+    function showUsernameSuggestions() {
+      const base = usernameInput.value || (firstNameInput ? firstNameInput.value : "");
+      const suggestions = generateSuggestions(base);
+      if (suggestions.length) {
+        usernameSuggestions.innerHTML = suggestions.map(s => `<div class="username-suggestion" style="padding:6px 12px;cursor:pointer;">${s}</div>`).join('');
+        usernameSuggestions.style.display = "block";
+        // عند الضغط على اقتراح
+        usernameSuggestions.querySelectorAll('.username-suggestion').forEach(div => {
+          div.onclick = () => {
+            usernameInput.value = div.textContent;
+            usernameSuggestions.style.display = "none";
+            usernameInput.dispatchEvent(new Event('input'));
+          };
+        });
+      } else {
+        usernameSuggestions.style.display = "none";
+      }
+    }
+
+    // تحقق من اليوزرنيم
+    if (usernameInput) {
+      usernameInput.addEventListener('input', function() {
+        const val = usernameInput.value.trim().toLowerCase();
+        let error = "";
+        if (val.length < 4) {
+          error = "Username must be at least 4 characters.";
+        } else if (existingUsernames.includes(val)) {
+          error = "This username is already taken.";
+          showUsernameSuggestions();
+        } else {
+          usernameSuggestions.style.display = "none";
+        }
+        usernameError.textContent = error;
+        usernameError.style.display = error ? "block" : "none";
+        usernameInput.style.borderColor = error ? "#d32f2f" : "";
+        // لو الاسم مش متكرر لكن قصير، برضه طلع اقتراحات
+        if (!error || error.includes("taken")) showUsernameSuggestions();
+      });
+      // إظهار اقتراحات عند كتابة الاسم الأول أو الأخير
+      if (firstNameInput) firstNameInput.addEventListener('input', showUsernameSuggestions);
+      if (lastNameInput) lastNameInput.addEventListener('input', showUsernameSuggestions);
+      // إخفاء الاقتراحات عند فقدان التركيز
+      usernameInput.addEventListener('blur', () => setTimeout(() => { usernameSuggestions.style.display = "none"; }, 200));
+    }
+
+    form.addEventListener('submit', function(e) {
+      const val = nationalIdInput.value.trim();
+      let error = "";
+      if (!/^\d{14}$/.test(val)) {
+        error = "National ID must be exactly 14 digits.";
+      } else if (existingNationalIds.includes(val)) {
+        error = "This National ID is already registered.";
+      }
+      if (error) {
+        nationalIdError.textContent = error;
+        nationalIdError.style.display = "block";
+        nationalIdInput.style.borderColor = "#d32f2f";
+        e.preventDefault();
+      }
+      // تحقق عند الإرسال
+      const usernameVal = usernameInput.value.trim().toLowerCase();
+      let usernameErr = "";
+      if (usernameVal.length < 4) {
+        usernameErr = "Username must be at least 4 characters.";
+      } else if (existingUsernames.includes(usernameVal)) {
+        usernameErr = "This username is already taken.";
+      }
+      if (usernameErr) {
+        usernameError.textContent = usernameErr;
+        usernameError.style.display = "block";
+        usernameInput.style.borderColor = "#d32f2f";
+        e.preventDefault();
+      } else {
+        // بعد نجاح تسجيل الدخول أو التسجيل
+        localStorage.setItem('loggedInUsername', usernameInput.value.trim());
+      }
+    });
+  </script>
+</body>
+</html>

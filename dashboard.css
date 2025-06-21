@@ -1,0 +1,295 @@
+body.dashboard-page {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.dashboard-header {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(6px);
+  padding: 32px 0 16px 0;
+  text-align: center;
+  box-shadow: 0 4px 24px 0 rgba(30,60,114,0.08);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  margin-bottom: 32px;
+}
+
+.dash-title {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: 1px;
+}
+
+.dash-subtitle {
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  padding: 32px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.video-card {
+  background: rgba(255,255,255,0.13);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(30,60,114,0.13);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 16px 40px 0 rgba(30,60,114,0.18);
+}
+
+.video-card iframe {
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  background: #000;
+}
+
+.video-card h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 18px 0 16px 0;
+  text-align: center;
+  letter-spacing: 0.5px;
+  cursor: pointer; /* يجعل المؤشر يظهر كأنه زر */
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.video-card h3:hover {
+  color: #6dd5ed; /* لون مميز عند الهوفر */
+  text-decoration: underline; /* خط تحت النص عند الهوفر */
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+.fade-in-up.delay-1 { animation-delay: 0.2s; }
+.fade-in-up.delay-2 { animation-delay: 0.4s; }
+.fade-in-up.delay-3 { animation-delay: 0.6s; }
+.fade-in-up.delay-4 { animation-delay: 0.8s; }
+
+/* اجعل كل العناصر الرئيسية تظهر بالأنيميشن */
+.dashboard-header,
+.dashboard-slider,
+.search-bar-container,
+.video-grid,
+.exams-section,
+.exam-card,
+.video-card {
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+
+/* أضف تأخيرات مختلفة حسب الحاجة */
+.dashboard-header { animation-delay: 0.1s; }
+.dashboard-slider { animation-delay: 0.25s; }
+.search-bar-container { animation-delay: 0.4s; }
+.video-grid, .exams-section { animation-delay: 0.55s; }
+.video-card, .exam-card { animation-delay: 0.7s; }
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  left: 0; top: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background: #fff;
+  margin: 10% auto;
+  padding: 30px 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+  position: relative;
+}
+.close {
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+#videoCodeInput {
+  width: 80%;
+  padding: 8px;
+  margin: 16px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#submitCode {
+  padding: 8px 24px;
+  border: none;
+  border-radius: 6px;
+  background: #1e3c72;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  margin-top: -6px;
+}
+
+#searchInput {
+  width: 60%;
+  max-width: 100%;
+  padding: 10px 38px 10px 38px;
+  border-radius: 22px;
+  border: 1.5px solid #6dd5ed;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: rgba(255,255,255,0.18);
+  color: #222;
+}
+
+.search-bar-container .fa-search {
+  margin-left: -32px;
+  color: #6dd5ed;
+  font-size: 1.2em;
+  pointer-events: none;
+}
+
+.dashboard-slider {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 28px auto 18px auto;
+}
+.slider-tab {
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-tab.active,
+.slider-tab:hover {
+  background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  transform: scale(1.07);
+  box-shadow: 0 4px 18px 0 #2193b055;
+  /* إضافة أنيميشن border-bottom */
+}
+
+.slider-tab.active::after,
+.slider-tab:hover::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 6px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  animation: tabUnderline 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes tabUnderline {
+  from { left: 50%; right: 50%; opacity: 0; }
+  to { left: 18%; right: 18%; opacity: 1; }
+}
+
+.exams-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 24px;
+}
+.exam-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px 0 rgba(30,60,114,0.10);
+  padding: 24px 18px;
+  min-width: 220px;
+  max-width: 320px;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+.exam-card h3 {
+  color: #1e3c72;
+  margin-bottom: 12px;
+}
+.exam-card .btn-animate {
+  margin-top: 10px;
+}
+
+/* أضف في dashboard.css */
+.exam-modal-content {
+  max-width: 420px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #2196f320;
+  padding: 28px 18px 18px 18px;
+  text-align: left;
+  position: relative;
+}
+.mcq-question {
+  margin-bottom: 18px;
+  background: #f5fafd;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.mcq-question p {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  color: #1976d2;
+}
+#examResult h4 {
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+#mistakesList {
+  color: #d32f2f;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+#examTimer {
+  font-size: 1.1em;
+}

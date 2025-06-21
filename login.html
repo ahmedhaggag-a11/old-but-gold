@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Knowledge Center</title>
+  <link rel="stylesheet" href="login.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../knowledge/images/download.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="login-page">
+
+  <div class="login-container">
+    <h2 class="fade-in">Welcome to knowledge</h2>
+    <form action="/login" method="POST" class="form-animate">
+      <div class="input-group">
+        <div class="form-group">
+          <input type="text" name="username" placeholder="Username" required class="input-animate"/>
+        </div>
+        <div class="form-group password-wrapper">
+          <input type="password" name="password" id="password" placeholder="Password" required class="input-animate"/>
+          <span class="toggle-password">
+            <i class="fa-regular fa-eye" id="togglePassword"></i>
+          </span>
+        </div>
+        <div class="form-group">
+          
+        </div>
+      </div>
+      <button type="submit" class="btn-animate">Login</button>
+      <p class="register-link">Don't have an account? <a href="register.html">Register here</a></p>
+      <p class="forgot-password"><a href="forgot-password.html">Forgot Password?</a></p>
+      <p class="terms">By logging in, you agree to our <a href="terms.html">Terms of Service</a> and <a href="terms.html">Privacy Policy</a>.</p>
+    </form>
+  </div>
+  <script>
+  const togglePassword = document.getElementById('togglePassword');
+  const password = document.getElementById('password');
+  togglePassword.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
+</body>
+</html>
