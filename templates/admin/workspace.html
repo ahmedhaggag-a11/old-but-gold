@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>بيئة عمل الأدمن</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../../static/css/workspace.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+</head>
+<body>
+  <div class="workspace-container">
+    <div class="workspace-header">
+      <h1><i class="fas fa-tools"></i> بيئة عمل الأدمن</h1>
+      <div class="admin-controls">
+        <span class="admin-info">مرحباً {{ current_user.name }}</span>
+        <a href="{{ url_for('auth.logout_page') }}" class="logout-btn" onclick="return confirm('هل تريد تسجيل الخروج؟')">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </a>
+      </div>
+    </div>
+    <div class="workspace-tabs">
+      <button class="active" onclick="showSection('videos', event)"><i class="fas fa-video"></i> الفيديوهات</button>
+      <button onclick="showSection('codes', event)"><i class="fas fa-key"></i> أكواد الشهور</button>
+      <button onclick="showSection('documents', event)"><i class="fas fa-file-upload"></i> رفع أوراق</button>
+      <button onclick="showSection('books', event)"><i class="fas fa-book"></i> إدارة الكتب</button>
+      <button onclick="showSection('teachers', event)"><i class="fas fa-chalkboard-teacher"></i> إدارة المدرسين</button>
+      <button onclick="showSection('online-exams', event)"><i class="fas fa-laptop"></i> الامتحانات الإلكترونية</button>
+      <button onclick="showSection('users', event)"><i class="fas fa-users"></i> المستخدمين</button>
+    </div>
+
+    <!-- قسم الفيديوهات -->
+    <div class="workspace-section active" id="section-videos">
+      <h2>إدارة الفيديوهات</h2>
+      
+      <!-- نموذج رفع الفيديو -->
+      <form id="uploadVideoForm" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="videoFile">ملف الفيديو:</label>
+          <input type="file" name="video" accept="video/*" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="thumbnailFile">الصورة المصغرة (اختياري):</label>
+          <input type="file" name="thumbnail" accept="image/*">
+        </div>
+        
+        <div class="form-group">
+          <label for="videoTitle">عنوان الفيديو:</label>
+          <input type="text" name="title" placeholder="أدخل عنوان الفيديو" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="videoGrade">المرحلة:</label>
+          <select name="grade_id" id="videoGradeSelect" required>
+            <option value="">اختر المرحلة</option>
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="videoSubject">المادة:</label>
+          <select name="subject" id="videoSubjectSelect" required>
+            <option value="">اختر المادة</option>
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+          </select>
+        </div>
+        
+        <button type="submit">
+          <i class="fas fa-upload"></i> رفع فيديو
+        </button>
+      </form>
+      
+      <!-- جدول الفيديوهات -->
+      <div class="table-container">
+        <h3>الفيديوهات المرفوعة</h3>
+        
+        <!-- فلاتر الفيديوهات -->
+        <div class="users-controls">
+          <select id="videoGradeFilter" class="grade-select">
+            <option value="">جميع المراحل</option>
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+          </select>
+          <select id="videoSubjectFilter" class="grade-select">
+            <option value="">جميع المواد</option>
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+          </select>
+          <button onclick="filterVideos()" class="filter-btn"><i class="fas fa-search"></i> تصفية</button>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>الصورة المصغرة</th>
+                  <th>العنوان</th>
+                  <th>المرحلة</th>
+                  <th>المادة</th>
+                  <th>عدد المشاهدات</th>
+                  <th>تاريخ الرفع</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="videosTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div id="videosList"></div>
+    </div>
+    
+
+    <!-- قسم أكواد الفيديوهات -->
+    <div class="workspace-section" id="section-codes">
+      <h2>توليد أكواد الاشتراكات الشهرية</h2>
+      <p class="section-description">هذه الأكواد تمنح المستخدم صلاحية الدخول إلى لوحة التحكم لمدة شهر واحد من تاريخ التفعيل.</p>
+      <form id="generateCodeForm">
+        <input type="number" name="count" placeholder="عدد الأكواد" min="1" max="50" required>
+        <select name="grade_id" id="codeGradeSelect" required>
+          <option value="">اختر المرحلة</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button type="submit"><i class="fas fa-key"></i> توليد أكواد</button>
+      </form>
+      <div class="users-controls">
+        <input type="text" id="codeSearch" placeholder="البحث برقم المستخدم (user-id)" class="search-input">
+        <select id="codeGradeFilter" class="grade-select">
+          <option value="">جميع المراحل</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button onclick="filterCodes()" class="filter-btn"><i class="fas fa-search"></i> بحث</button>
+      </div>
+      <div class="table-scroll-container">
+        <div class="table-wrapper">
+          <table class="admin-table">
+          <thead>
+            <tr>
+              <th>code</th>
+              <th>grade</th>
+              <th>expire-date</th>
+              <th>activate</th>
+              <th>user-id</th>
+              <th>delete</th>
+            </tr>
+          </thead>
+          <tbody id="codesTable"></tbody>
+        </table>
+        </div>
+      </div>
+      <div class="code-list" id="codesList"></div>
+    </div>
+    <!-- قسم رفع الأوراق -->
+    <div class="workspace-section" id="section-documents">
+      <h2>رفع أوراق</h2>
+      <form id="uploadDocumentForm" enctype="multipart/form-data">
+        <input type="file" name="sheet" accept=".pdf,.doc,.docx" required>
+        <input type="text" name="title" placeholder="عنوان الورقة" required>
+        <input type="text" name="type" placeholder="نوع الورقة (اختياري)">
+        <select name="grade_id" id="documentGradeSelect" required>
+          <option value="">اختر المرحلة</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button type="submit"><i class="fas fa-upload"></i> رفع ورقة</button>
+      </form>
+      
+      <div class="users-controls">
+        <input type="text" id="sheetSearch" placeholder="البحث باسم الورقة" class="search-input">
+        <select id="sheetGradeFilter" class="grade-select">
+          <option value="">جميع المراحل</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button onclick="filterSheets()" class="filter-btn"><i class="fas fa-search"></i> بحث</button>
+      </div>
+      
+      <div class="table-scroll-container">
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>sheet-id</th>
+                <th>sheet-name</th>
+                <th>grade</th>
+                <th>upload-date</th>
+                <th>delete</th>
+              </tr>
+            </thead>
+            <tbody id="sheetsTable"></tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div id="documentsList"></div>
+    </div>
+    
+
+    <!-- قسم إدارة الكتب -->
+    <div class="workspace-section" id="section-books">
+      <h2>إدارة الكتب</h2>
+      <form id="uploadBookForm" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="text" name="title" placeholder="اسم الكتاب" required>
+        <input type="number" name="price" placeholder="السعر بالجنيه" min="1" required>
+        <select name="grade_id" id="bookGradeSelect" required>
+          <option value="">اختر المرحلة</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button type="submit"><i class="fas fa-upload"></i> رفع كتاب</button>
+      </form>
+      
+      <div class="users-controls">
+        <input type="text" id="bookSearch" placeholder="البحث باسم الكتاب" class="search-input">
+        <select id="bookGradeFilter" class="grade-select">
+          <option value="">جميع المراحل</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button onclick="filterBooks()" class="filter-btn"><i class="fas fa-search"></i> بحث</button>
+      </div>
+      
+      <div class="table-scroll-container">
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>book-id</th>
+                <th>book-image</th>
+                <th>book-name</th>
+                <th>price</th>
+                <th>grade</th>
+                <th>upload-date</th>
+                <th>delete</th>
+              </tr>
+            </thead>
+            <tbody id="booksTable"></tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div id="booksList"></div>
+    </div>
+
+    <!-- قسم إدارة المدرسين -->
+    <div class="workspace-section" id="section-teachers">
+      <h2>إدارة المدرسين</h2>
+      <form id="uploadTeacherForm" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="text" name="name" placeholder="اسم المدرس" required>
+        <input type="text" name="subject" placeholder="المادة" required>
+        <select name="section" required>
+          <option value="">اختر القسم</option>
+          <option value="heroes">مدرسين الأبطال</option>
+          <option value="new">المدرسين الجدد</option>
+        </select>
+        <input type="number" name="order_num" placeholder="ترتيب العرض" min="1" value="1">
+        <button type="submit"><i class="fas fa-upload"></i> إضافة مدرس</button>
+      </form>
+      
+      <div class="users-controls">
+        <select id="teacherSectionFilter" class="grade-select">
+          <option value="">جميع الأقسام</option>
+          <option value="heroes">مدرسين الأبطال</option>
+          <option value="new">المدرسين الجدد</option>
+        </select>
+        <button onclick="filterTeachers()" class="filter-btn"><i class="fas fa-search"></i> تصفية</button>
+      </div>
+      
+      <div class="table-scroll-container">
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>teacher-id</th>
+                <th>teacher-image</th>
+                <th>teacher-name</th>
+                <th>subject</th>
+                <th>section</th>
+                <th>order</th>
+                <th>edit</th>
+                <th>delete</th>
+              </tr>
+            </thead>
+            <tbody id="teachersTable"></tbody>
+          </table>
+        </div> 
+      </div>
+      
+      <div id="teachersList"></div>
+    </div>
+
+    <!-- قسم الامتحانات الإلكترونية -->
+    <div class="workspace-section" id="section-online-exams">
+      <h2>إدارة الامتحانات الإلكترونية</h2>
+      <p class="section-description">إنشاء امتحانات إلكترونية بالاختيار من متعدد مع تصحيح تلقائي</p>
+      
+      <!-- نموذج إنشاء امتحان -->
+      <form id="createOnlineExamForm">
+        <div class="form-group">
+          <label for="examTitle">عنوان الامتحان:</label>
+          <input type="text" id="examTitle" name="title" placeholder="أدخل عنوان الامتحان" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="examGrade">المرحلة:</label>
+          <select id="examGradeSelect" name="grade_id" required>
+
+            <option value="">اختر المرحلة</option>
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+          </select>
+          
+        </div>
+        
+        <div class="form-group">
+          <label for="examDuration">المدة بالدقائق:</label>
+          <input type="number" id="examDuration" name="duration" placeholder="مثال: 60" min="1" required>
+        </div>
+        
+        <div class="form-group">
+          <label>الأسئلة:</label>
+          <div id="questionsContainer">
+            <!-- الأسئلة ستضاف هنا ديناميكياً -->
+          </div>
+          <button type="button" onclick="addQuestion()" class="btn-secondary">
+            <i class="fas fa-plus"></i> إضافة سؤال
+          </button>
+        </div>
+        
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-save"></i> إنشاء الامتحان
+        </button>
+      </form>
+      
+      <!-- جدول الامتحانات -->
+      <div class="table-container">
+        <h3>الامتحانات الإلكترونية</h3>
+        <div class="users-controls">
+          <select id="onlineExamGradeFilter" class="grade-select">
+            <option value="">جميع المراحل</option>
+          </select>
+          <button onclick="filterOnlineExams()" class="filter-btn">
+            <i class="fas fa-search"></i> تصفية
+          </button>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>العنوان</th>
+                  <th>المرحلة</th>
+                  <th>المدة</th>
+                  <th>عدد الأسئلة</th>
+                  <th>تاريخ الإنشاء</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="onlineExamsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- جدول النتائج -->
+      <div class="table-container">
+        <h3>نتائج الامتحانات</h3>
+        <div class="users-controls">
+          <input type="text" id="examResultUserIdSearch" placeholder="بحث برقم الطالب (user-id)" class="search-input">
+          <select id="examResultGradeFilter" class="grade-select">
+            <option value="">جميع المراحل</option>
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+          </select>
+          <button onclick="filterExamResults()" class="filter-btn"><i class="fas fa-search"></i> بحث</button>
+        </div>
+        <div class="table-scroll-container">
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>user-id</th>
+                  <th>الطالب</th>
+                  <th>الامتحان</th>
+                  <th>المرحلة</th>
+                  <th>الدرجة</th>
+                  <th>الإجابات الصحيحة</th>
+                  <th>الإجابات الخاطئة</th>
+                  <th>الوقت المستغرق</th>
+                  <th>تاريخ التقديم</th>
+                  <th>إعادة الامتحان</th>
+                </tr>
+              </thead>
+              <tbody id="examResultsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم المستخدمين -->
+    <div class="workspace-section" id="section-users">
+      <h2>المستخدمين</h2>
+      <div class="users-controls">
+        <input type="text" id="userSearch" placeholder="البحث برقم المستخدم (user-id)" class="search-input">
+        <select id="gradeFilter" class="grade-select">
+          <option value="">جميع المراحل</option>
+          <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </select>
+        <button onclick="filterUsers()" class="filter-btn"><i class="fas fa-search"></i> بحث</button>
+      </div>
+      <div class="table-scroll-container">
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>user-id</th>
+                <th>name</th>
+                <th>parent-name</th>
+                <th>username</th>
+                <th>email</th>
+                <th>national-id</th>
+                <th>phone</th>
+                <th>parent-phone</th>
+                <th>address</th>
+                <th>grade</th>
+                <th>status</th>
+                <th>password</th>
+                <th>delete-user</th>
+              </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    
+  <!-- Modal for Teacher Management -->
+  <div id="teacherModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+      <span class="close" onclick="closeTeacherModal()">&times;</span>
+      <h2 id="modalTitle">تعديل المدرس</h2>
+      <form id="teacherEditForm" enctype="multipart/form-data">
+        <input type="hidden" id="teacherId" name="teacher_id">
+        
+        <div class="form-group">
+          <label for="teacherName">اسم المدرس:</label>
+          <input type="text" id="teacherName" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="teacherSubject">المادة:</label>
+          <input type="text" id="teacherSubject" name="subject" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="teacherSection">القسم:</label>
+          <select id="teacherSection" name="section" required>
+            <option value="heroes">مدرسين الأبطال</option>
+            <option value="new">المدرسين الجدد</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="teacherOrder">ترتيب العرض:</label>
+          <input type="number" id="teacherOrder" name="order_num" min="1" value="1">
+        </div>
+        
+        <div class="form-group">
+          <label for="teacherImage">صورة المدرس:</label>
+          <input type="file" id="teacherImage" name="image" accept="image/*">
+          <div id="currentImage" style="margin-top: 10px;"></div>
+        </div>
+        
+        <div class="form-buttons">
+          <button type="submit" class="submit-btn">حفظ التغييرات</button>
+          <button type="button" onclick="closeTeacherModal()" class="cancel-btn">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="../../static/js/workspace.js"></script>
+</body>
+</html>

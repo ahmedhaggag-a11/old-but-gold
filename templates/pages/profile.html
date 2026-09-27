@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>الملف الشخصي</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+    <link rel="stylesheet" href="../../static/css/dashboard.css?v={{ range(1, 1000) | random }}">
+    <link rel="stylesheet" href="../../static/css/style.css?v={{ range(1, 1000) | random }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body.profile-page {
+            height: auto;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(30, 60, 114, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #1a237e 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-avatar i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .profile-header h2 {
+            color: #1e3c72;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .profile-info {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.1);
+        }
+
+        .profile-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(30, 60, 114, 0.1);
+        }
+
+        .profile-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-row label {
+            color: #1e3c72;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .profile-info-row span {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .profile-table-title {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 30px 0 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #1a237e 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.1);
+        }
+
+        .profile-table thead {
+            background: linear-gradient(135deg, #2196f3 0%, #2196f3 100%);
+
+        }
+
+        .profile-table th {
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .profile-table th,
+        .profile-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(30, 60, 114, 0.1);
+            color: #000000;
+            font-size: 0.9rem;
+        }
+
+        .profile-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .back-to-dashboard {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 147, 176, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-to-dashboard:hover {
+            background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 147, 176, 0.4);
+            color: white;
+        }
+
+        .score-success {
+            color: #4CAF50 !important;
+            font-weight: 600;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .score-warning {
+            color: #ff9800 !important;
+            font-weight: 600;
+            background: rgba(255, 152, 0, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .score-error {
+            color: #f44336 !important;
+            font-weight: 600;
+            background: rgba(244, 67, 54, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .correct-answers {
+            color: #4CAF50;
+            font-weight: 600;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .wrong-answers {
+            color: #f44336;
+            font-weight: 600;
+            background: rgba(244, 67, 54, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .time-taken {
+            color: #2196F3;
+            font-weight: 600;
+            background: rgba(33, 150, 243, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .exam-date {
+            color: #ffffff;
+            font-weight: 600;
+            background: rgba(156, 39, 176, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        /* Modal styles for better scrolling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .modal-content h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #answersContent {
+            line-height: 1.6;
+        }
+
+        #answersContent div {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        #answersContent ul {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+
+        #answersContent li {
+            margin-bottom: 8px;
+            padding: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 20px;
+                padding: 25px 20px;
+                overflow-y: auto;
+            }
+
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .profile-avatar i {
+                font-size: 2.5rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .profile-info {
+                padding: 20px;
+            }
+
+            .profile-info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .profile-info-row label {
+                font-size: 1rem;
+            }
+
+            .profile-info-row span {
+                font-size: 0.9rem;
+            }
+
+            .profile-table-title {
+                font-size: 1.3rem;
+                padding: 12px;
+            }
+
+            .profile-table th,
+            .profile-table td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+
+            .back-to-dashboard {
+                top: 15px;
+                left: 15px;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .profile-table{
+                margin-left: -10px;
+            }
+            
+            /* Add vertical scroll for table on small screens */
+            .profile-container {
+                overflow-y: auto;
+                max-height: 70vh;
+            }
+            
+            .profile-table {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            
+            .profile-table thead {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                margin: 10px;
+                padding: 20px 15px;
+                overflow-y: auto;
+                max-height: 80vh;
+            }
+
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .profile-avatar i {
+                font-size: 2rem;
+            }
+
+            .profile-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .profile-info {
+                padding: 15px;
+            }
+
+            .profile-table-title {
+                font-size: 1.1rem;
+                padding: 10px;
+            }
+
+            .profile-table th,
+            .profile-table td {
+                padding: 8px 6px;
+                font-size: 0.8rem;
+            }
+            
+            .profile-table {
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            
+            .profile-table thead {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .back-to-dashboard {
+                top: 10px;
+                left: 10px;
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            /* Modal improvements for small screens */
+            .modal-content {
+                margin: 5% auto;
+                max-width: 95% !important;
+                max-height: 90vh !important;
+                padding: 20px;
+            }
+            
+            .modal-content h3 {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+            }
+            
+            #answersContent {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            #answersContent div {
+                margin-bottom: 15px;
+            }
+            
+            #answersContent ul {
+                margin-left: 15px;
+            }
+            
+            #answersContent li {
+                margin-bottom: 6px;
+            }
+        }
+        @media (max-width: 375px) {
+            .profile-table{
+                margin-left: -2rem;
+            }
+        }
+    </style>
+</head>
+<body class="profile-page">
+    <a href="{{ url_for('index') }}" class="back-to-dashboard">
+        <i class="fas fa-home"></i> الصفحة الرئيسية
+    </a>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <h2 id="profileUsername">اسم المستخدم</h2>
+        </div>
+
+        <div class="profile-info">
+            <div class="profile-info-row">
+                <label><i class="fas fa-user"></i> الاسم:</label>
+                <span id="profileName">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-map-marker-alt"></i> العنوان:</label>
+                <span id="profileAddress">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-id-card"></i> رقم الطالب:</label>
+                <span id="profileStudentId">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-phone"></i> رقم ولي الأمر:</label>
+                <span id="profileFatherPhone">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-graduation-cap"></i> المرحلة:</label>
+                <span id="profileStage">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-envelope"></i> البريد الإلكتروني:</label>
+                <span id="profileEmail">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-user-friends"></i> اسم ولي الأمر:</label>
+                <span id="profileParentName">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-id-badge"></i> الرقم القومي:</label>
+                <span id="profileNationalId">---</span>
+            </div>
+            <div class="profile-info-row">
+                <label><i class="fas fa-venus-mars"></i> الجنس:</label>
+                <span id="profileGender">---</span>
+            </div>
+        </div>
+
+        <div class="profile-table-title">
+            <i class="fas fa-chart-line"></i> نتائج الامتحانات الإلكترونية
+        </div>
+
+        <table class="profile-table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-file-alt"></i> اسم الامتحان</th>
+                    <th><i class="fas fa-star"></i> النتيجة</th>
+                    <th><i class="fas fa-check-circle"></i> الإجابات الصحيحة</th>
+                    <th><i class="fas fa-times-circle"></i> الإجابات الخاطئة</th>
+                    <th><i class="fas fa-clock"></i> الوقت المستغرق</th>
+                    <th><i class="fas fa-calendar"></i> تاريخ التقديم</th>
+                    <th>عرض الإجابات</th>
+                </tr>
+            </thead>
+            <tbody id="examsTable">
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #666;">جاري التحميل...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="answersModal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:700px; max-height:80vh; overflow-y:auto;">
+            <span class="close" onclick="closeAnswersModal()">&times;</span>
+            <h3>إجاباتك في الامتحان</h3>
+            <div id="answersContent">جاري التحميل...</div>
+        </div>
+    </div>
+
+    <script>
+        // جلب بيانات المستخدم من الخادم
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/user-profile');
+                if (response.ok) {
+                    const userData = await response.json();
+                    
+                    document.getElementById('profileUsername').textContent = userData.username || 'اسم المستخدم';
+                    document.getElementById('profileName').textContent = userData.name || 'غير محدد';
+                    document.getElementById('profileAddress').textContent = userData.address || 'غير محدد';
+                    document.getElementById('profileStudentId').textContent = userData.student_id || 'غير محدد';
+                    document.getElementById('profileFatherPhone').textContent = userData.father_phone || 'غير محدد';
+                    document.getElementById('profileStage').textContent = userData.grade_name || 'غير محدد';
+                    document.getElementById('profileEmail').textContent = userData.email || 'غير محدد';
+                    document.getElementById('profileParentName').textContent = userData.parent_name || 'غير محدد';
+                    document.getElementById('profileNationalId').textContent = userData.national_id || 'غير محدد';
+                    
+                    // معالجة الجنس
+                    const genderText = userData.gender === 'male' ? 'ذكر' : 
+                                     userData.gender === 'female' ? 'أنثى' : 'غير محدد';
+                    document.getElementById('profileGender').textContent = genderText;
+                } else {
+                    console.error('Failed to load user profile');
+                    showErrorMessage('فشل في تحميل بيانات الملف الشخصي');
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                showErrorMessage('حدث خطأ في تحميل بيانات الملف الشخصي');
+            }
+        }
+
+        // جلب نتائج الامتحانات من الخادم
+        async function loadExamResults() {
+            try {
+                const response = await fetch('/api/online-exams/results');
+                if (response.ok) {
+                    const examResults = await response.json();
+                    const examsTable = document.getElementById('examsTable');
+                    
+                    if (examResults.length > 0) {
+                        examsTable.innerHTML = examResults.map(exam => {
+                            const scorePercentage = (exam.score / exam.total_questions) * 100;
+                            const scoreClass = scorePercentage >= 80 ? 'score-success' : 
+                                             scorePercentage >= 60 ? 'score-warning' : 'score-error';
+                            
+                            // تنسيق الوقت
+                            const minutes = Math.floor(exam.time_taken / 60);
+                            const seconds = exam.time_taken % 60;
+                            const timeFormatted = minutes > 0 ? `${minutes}د ${seconds}ث` : `${seconds}ثانية`;
+                            
+                            // تنسيق التاريخ
+                            const examDate = exam.completed_at ? new Date(exam.completed_at) : new Date();
+                            const dateFormatted = examDate.toLocaleDateString('ar-EG');
+                            
+                            return `<tr>
+                                <td>${exam.exam_title}</td>
+                                <td class="${scoreClass}">${exam.score.toFixed(1)}% (${exam.correct_answers}/${exam.total_questions})</td>
+                                <td class="correct-answers">${exam.correct_answers}</td>
+                                <td class="wrong-answers">${exam.wrong_answers}</td>
+                                <td class="time-taken">${timeFormatted}</td>
+                                <td class="exam-date">${dateFormatted}</td>
+                                <td><button class='btn btn-info btn-sm' onclick='showExamAnswers(${exam.id})'>عرض</button></td>
+                            </tr>`;
+                        }).join('');
+                    } else {
+                        examsTable.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #666;">لا يوجد امتحانات بعد</td></tr>`;
+                    }
+                } else {
+                    console.error('Failed to load exam results');
+                    const examsTable = document.getElementById('examsTable');
+                    examsTable.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #f44336;">فشل في تحميل نتائج الامتحانات</td></tr>`;
+                }
+            } catch (error) {
+                console.error('Error loading exam results:', error);
+                const examsTable = document.getElementById('examsTable');
+                examsTable.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #f44336;">حدث خطأ في تحميل نتائج الامتحانات</td></tr>`;
+            }
+        }
+
+        // عرض رسائل الخطأ
+        function showErrorMessage(message) {
+            // يمكن إضافة toast notification هنا
+            console.error(message);
+        }
+
+        // تحميل البيانات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force reload if needed
+            if (performance.navigation.type === 1) {
+                console.log('Page was reloaded');
+            }
+            loadUserProfile();
+            loadExamResults();
+        });
+
+        // Force reload on page focus (for development)
+        window.addEventListener('focus', function() {
+            if (window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1')) {
+                console.log('Development mode - checking for updates');
+            }
+        });
+
+        function showExamAnswers(resultId) {
+            const modal = document.getElementById('answersModal');
+            const content = document.getElementById('answersContent');
+            modal.style.display = 'block';
+            content.innerHTML = 'جاري التحميل...';
+            fetch(`/api/online-exams/result-answers/${resultId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        content.innerHTML = `<div style='color:red;'>${data.error}</div>`;
+                        return;
+                    }
+                    if (!data.questions || !data.questions.length) {
+                        content.innerHTML = '<div>لا توجد بيانات للإجابات</div>';
+                        return;
+                    }
+                    content.innerHTML = data.questions.map((q, idx) => `
+                        <div style='margin-bottom:18px;'>
+                            <div><b>س${idx+1}:</b> ${q.question_text}</div>
+                            ${q.question_image ? `<div><img src="${q.question_image.startsWith('http') ? q.question_image : '/uploads/' + q.question_image}" style="max-width:200px;max-height:150px;border-radius:5px;"></div>` : ''}
+                            <ul style='margin:8px 0 0 0;padding:0;list-style:none;'>
+                                ${q.options.map(opt => `
+                                    <li style='margin-bottom:4px;'>
+                                        <span style='font-weight:${opt.is_correct ? 'bold' : 'normal'};color:${opt.is_correct ? '#28a745' : (opt.id === q.selected_option_id ? '#1976d2' : '#333')};'>
+                                            ${opt.letter}) ${opt.text}
+                                            ${opt.is_correct ? '✔️' : ''}
+                                            ${opt.id === q.selected_option_id && !opt.is_correct ? '❌' : ''}
+                                            ${opt.id === q.selected_option_id ? '<span style="font-size:12px;"> (إجابتك)</span>' : ''}
+                                        </span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `).join('');
+                })
+                .catch(() => { content.innerHTML = '<div style="color:red;">حدث خطأ في تحميل الإجابات</div>'; });
+        }
+
+        function closeAnswersModal() {
+            document.getElementById('answersModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('answersModal');
+            if (event.target == modal) modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

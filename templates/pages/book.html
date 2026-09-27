@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Books Library</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body>
+  <header class="library-header">
+    <a href="{{ url_for('index') }}" class="main-back-btn">
+      <i class="fas fa-home"></i> main page
+    </a>
+  </header>
+  <section class="library-section">
+    <h1 class="library-title">📚 Books Library</h1>
+    <p class="library-subtitle">Explore our best educational books!</p>
+
+  <div class="search-bar-container">
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <i class="fa fa-search"></i>
+  </div>
+
+    <div class="book-grid" id="bookGrid">
+      <!-- سيتم ملء هذا من قاعدة البيانات -->
+      <div class="loading">جاري تحميل الكتب...</div>
+    </div>
+  </section>
+
+  <div id="buyModal" class="buy-modal">
+    <div class="buy-modal-content">
+      <span class="buy-close" id="closeBuyModal">&times;</span>
+      <h2 class="buy-title">شراء الكتب او الاكواد</h2>
+      <div class="buy-info">
+        <p class="buy-number">تقدر تشتري او تحجز من السنتر رقم فودافون كاش: <b>01034273280</b></p>
+        <p class="buy-whatsapp">بعد التحويل ابعت صورة الإيصال على <a href="https://wa.me/01034273280" target="_blank">واتساب</a></p>
+      </div>
+      <div class="buy-anim">
+        <span class="money-emoji">💸</span>
+        <span class="money-emoji">💸</span>
+        <span class="money-emoji">💸</span>
+        <!-- <span style="font-size:1.2em; margin-left:10px;">تمت عملية الشراء بنجاح!</span> -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // تحميل الكتب من قاعدة البيانات
+    async function loadBooks() {
+      try {
+        const response = await fetch('/api/books');
+        const books = await response.json();
+        const bookGrid = document.getElementById('bookGrid');
+        
+        if (books.length === 0) {
+          bookGrid.innerHTML = '<div class="no-content">لا توجد كتب متاحة حالياً</div>';
+          return;
+        }
+        
+        bookGrid.innerHTML = books.map(book => `
+          <div class="book-card">
+            ${book.image_path ? `<img src="${book.image_path.startsWith('http') ? book.image_path : '/uploads/' + book.image_path}" alt="${book.title}">` : ''}
+            <h3>${book.title}</h3>
+            <p>${book.price} L.E</p>
+            <a href="#" class="book-btn">buy now</a>
+          </div>
+        `).join('');
+        
+        // إعادة ربط أحداث الأزرار
+        attachBookButtonEvents();
+        
+      } catch (error) {
+        console.error('Error loading books:', error);
+        document.getElementById('bookGrid').innerHTML = '<div class="no-content">خطأ في تحميل الكتب</div>';
+      }
+    }
+
+    // ربط أحداث أزرار buy now
+    function attachBookButtonEvents() {
+      document.querySelectorAll('.book-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.getElementById('buyModal').style.display = 'flex';
+          setTimeout(() => {
+            document.querySelector('.buy-modal-content').classList.add('show');
+          }, 10);
+        });
+      });
+    }
+
+    // غلق المودال
+    document.getElementById('closeBuyModal').onclick = function() {
+      document.querySelector('.buy-modal-content').classList.remove('show');
+      setTimeout(() => {
+        document.getElementById('buyModal').style.display = 'none';
+      }, 350);
+    };
+
+    // اغلاق عند الضغط خارج المودال
+    window.onclick = function(e) {
+      if (e.target == document.getElementById('buyModal')) {
+        document.querySelector('.buy-modal-content').classList.remove('show');
+        setTimeout(() => {
+          document.getElementById('buyModal').style.display = 'none';
+        }, 350);
+      }
+    };
+
+  // يعمل على تصفية الكتب حسب العنوان أثناء الكتابة في شريط البحث
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const val = this.value.toLowerCase();
+    document.querySelectorAll('.book-card').forEach(card => {
+      const title = card.querySelector('h3').textContent.toLowerCase();
+      card.style.display = title.includes(val) ? '' : 'none';
+    });
+  });
+
+  // جعل أيقونة البحث قابلة للضغط
+  document.querySelector('.fa-search').addEventListener('click', function() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.focus();
+    
+    // إذا كان هناك نص في البحث، قم بتنفيذ البحث
+    if (searchInput.value.trim()) {
+      const val = searchInput.value.toLowerCase();
+      document.querySelectorAll('.book-card').forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        card.style.display = title.includes(val) ? '' : 'none';
+      });
+    }
+  });
+
+  // تحميل الكتب عند تحميل الصفحة
+  document.addEventListener('DOMContentLoaded', loadBooks);
+  </script>
+</body>
+</html>
+
+<style>
+/* أضف هذا في book.css أو بين وسم <style> في رأس الصفحة */
+.main-back-btn {
+  position: absolute;
+  left: 32px;
+  top: 32px;
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  color: #fff !important;
+  padding: 10px 26px;
+  border-radius: 22px;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.main-back-btn:hover {
+  background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  box-shadow: 0 4px 18px 0 #2193b055;
+  color: #fff !important;
+  transform: scale(1.07);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #fff;
+  font-size: 1.2em;
+}
+
+.no-content {
+  text-align: center;
+  padding: 40px;
+  color: #fff;
+  font-size: 1.1em;
+}
+
+@media (max-width: 600px) {
+  .main-back-btn {
+    left: 10px;
+    top: 10px;
+    padding: 8px 16px;
+    font-size: 1em;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Rubik', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Rubik', 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  margin-top: -6px;
+}
+
+#searchInput {
+  width: 80%;
+  max-width: 100%;
+  padding: 10px 38px 10px 38px;
+  border-radius: 22px;
+  border: 1.5px solid #6dd5ed;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: rgba(255,255,255,0.18);
+  color: #222;
+}
+
+.search-bar-container .fa-search {
+  margin-left: -32px;
+  color: #6dd5ed;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.search-bar-container .fa-search:hover {
+  color: #2193b0;
+}
+
+.library-section {
+  text-align: center;
+  animation: fadeSlide 1.5s ease-in-out;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 16px 32px 16px;
+}
+
+.library-title {
+  color: #fff;
+  font-size: 2.7rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  animation: fadeInDown 0.8s;
+}
+
+.library-subtitle {
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInDown 0.8s 0.2s backwards;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  animation: fadeInUp 1s;
+}
+
+.book-card {
+  background: rgba(255,255,255,0.13);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(30,60,114,0.13);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 20px 16px;
+  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+  animation: fadeInUp 0.8s;
+}
+
+.book-card:hover {
+  transform: translateY(-10px) scale(1.04);
+  box-shadow: 0 16px 40px 0 rgba(30,60,114,0.18);
+  background: rgba(255,255,255,0.18);
+}
+
+.book-card img {
+  width: 120px;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 18px 0 rgba(30,60,114,0.10);
+  animation: fadeIn 1s;
+}
+
+.book-card h3 {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 10px 0 8px 0;
+  text-align: center;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.book-card h3:hover {
+  color: #6dd5ed;
+  text-decoration: underline;
+}
+
+.book-card p {
+  color: #e0e0e0;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.book-btn {
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 32px;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+  margin-top: auto;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.book-btn:hover {
+  background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  transform: scale(1.07);
+}
+
+/* Buy Modal Styles */
+.buy-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(30,60,114,0.55);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s;
+}
+
+.buy-modal-content {
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
+  box-shadow: 0 8px 40px 0 rgba(30,60,114,0.22);
+  padding: 36px 24px 32px 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  text-align: center;
+  position: relative;
+  transform: translateY(60px) scale(0.95);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+}
+.buy-modal-content.show {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.buy-close {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  font-size: 2rem;
+  color: #1e3c72;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.buy-close:hover { color: #6dd5ed; }
+
+.buy-title {
+  color: #1e3c72;
+  font-size: 2rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  animation: fadeInDown 0.7s;
+}
+
+.buy-info {
+  margin-bottom: 18px;
+  animation: fadeInUp 0.7s 0.2s backwards;
+}
+.buy-number {
+  font-size: 1.15rem;
+  color: #222;
+  margin-bottom: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.buy-whatsapp {
+  font-size: 1.1rem;
+  color: #1e3c72;
+}
+.buy-whatsapp a {
+  color: #25d366;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.buy-whatsapp a:hover { color: #128c7e; }
+
+.buy-anim {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  background: none;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+  position: static;
+  overflow: visible;
+}
+.money-emoji {
+  font-size: 2.2em;
+  animation: money-fall 1.2s infinite alternate;
+  display: inline-block;
+}
+.money-emoji:nth-child(2) { animation-delay: 0.2s; }
+.money-emoji:nth-child(3) { animation-delay: 0.4s; }
+.money-emoji:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes money-fall {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  80%  { transform: translateY(12px) scale(1.1); opacity: 0.85; }
+  100% { transform: translateY(18px) scale(1.15); opacity: 0.7; }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px);}
+  to { opacity: 1; transform: none;}
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-40px);}
+  to { opacity: 1; transform: none;}
+}
+@keyframes fadeIn {
+  from { opacity: 0;}
+  to { opacity: 1;}
+}
+
+</style>

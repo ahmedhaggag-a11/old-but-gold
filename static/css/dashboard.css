@@ -1,0 +1,687 @@
+body , html {
+  min-height: 100vh;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* لتحسين السكرولينج في iOS */
+}
+body.dashboard-page {
+  min-height: 100vh;
+  height: auto;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+/* إضافة container للداشبورد */
+.dashboard-container {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+
+.dashboard-header {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(6px);
+  padding: 32px 24px 16px 24px;
+  box-shadow: 0 4px 24px 0 rgba(30,60,114,0.08);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-center {
+  text-align: center;
+  flex: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.dash-title {
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: 1px;
+}
+
+.dash-subtitle {
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  padding: 32px;
+  max-width: 1200px;
+  margin: auto;
+  min-height: auto;
+  overflow: visible;
+}
+
+.video-card {
+  width: 340px !important;
+  min-width: 340px !important;
+  max-width: 340px !important;
+  height: 300px !important;
+  min-height: 300px !important;
+  max-height: 300px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.13);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(30,60,114,0.13);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.video-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 16px 40px 0 rgba(30,60,114,0.18);
+}
+
+.video-card video {
+  width: 320px !important;
+  height: 220px !important;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 16px;
+  background: #222;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: block;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.video-card h3 {
+  margin: 10px 0 0 0 !important;
+  padding: 0 !important;
+  font-size: 1.1rem;
+  text-align: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.video-card h3:hover {
+  color: #6dd5ed; /* لون مميز عند الهوفر */
+  text-decoration: underline; /* خط تحت النص عند الهوفر */
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+.fade-in-up.delay-1 { animation-delay: 0.2s; }
+.fade-in-up.delay-2 { animation-delay: 0.4s; }
+.fade-in-up.delay-3 { animation-delay: 0.6s; }
+.fade-in-up.delay-4 { animation-delay: 0.8s; }
+
+/* اجعل كل العناصر الرئيسية تظهر بالأنيميشن */
+.dashboard-header,
+.dashboard-slider,
+.search-bar-container,
+.video-grid,
+.exams-section,
+.exam-card,
+.video-card {
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+
+/* أضف تأخيرات مختلفة حسب الحاجة */
+.dashboard-header { animation-delay: 0.1s; }
+.dashboard-slider { animation-delay: 0.25s; }
+.search-bar-container { animation-delay: 0.4s; }
+.video-grid, .exams-section { animation-delay: 0.55s; }
+.video-card, .exam-card { animation-delay: 0.7s; }
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  left: 0; top: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background: #fff;
+  margin: 10% auto;
+  padding: 30px 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+  position: relative;
+}
+.close {
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+#videoCodeInput {
+  width: 80%;
+  padding: 8px;
+  margin: 16px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#submitCode {
+  padding: 8px 24px;
+  border: none;
+  border-radius: 6px;
+  background: #1e3c72;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  margin-top: -6px;
+}
+
+#searchInput {
+  width: 60%;
+  max-width: 100%;
+  padding: 10px 38px 10px 38px;
+  border-radius: 22px;
+  border: 1.5px solid #6dd5ed;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: rgba(255,255,255,0.18);
+  color: #222;
+}
+
+.search-bar-container .fa-search {
+  margin-left: -32px;
+  color: #6dd5ed;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.search-bar-container .fa-search:hover {
+  color: #2193b0;
+}
+
+.dashboard-slider {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 28px auto 18px auto;
+}
+.slider-tab {
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-tab.active,
+.slider-tab:hover {
+  background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  transform: scale(1.07);
+  box-shadow: 0 4px 18px 0 #2193b055;
+  /* إضافة أنيميشن border-bottom */
+}
+
+@keyframes tabUnderline {
+  from { left: 50%; right: 50%; opacity: 0; }
+  to { left: 18%; right: 18%; opacity: 1; }
+}
+
+.exams-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 32px;
+  max-width: 1200px;
+  margin: auto;
+  min-height: auto;
+  overflow: visible;
+}
+.exam-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px 0 rgba(30,60,114,0.10);
+  padding: 24px 18px;
+  min-width: 220px;
+  max-width: 320px;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+.exam-card h3 {
+  color: #1e3c72;
+  margin-bottom: 12px;
+}
+.exam-card .btn-animate {
+  margin-top: 10px;
+}
+.main-back-btn {
+  position: absolute;
+  left: 32px;
+  top: 32px;
+  background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+  color: #fff !important;
+  padding: 10px 26px;
+  border-radius: 22px;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px 0 rgba(30,60,114,0.10);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.main-back-btn:hover {
+  background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  box-shadow: 0 4px 18px 0 #2193b055;
+  color: #fff !important;
+  transform: scale(1.07);
+}
+@media (max-width: 600px) {
+  .main-back-btn {
+    left: 10px;
+    top: 10px;
+    padding: 8px 16px;
+    font-size: 1em;
+  }
+}
+
+/* تم حذف أي تنسيقات أو عناصر تخص القفل أو إخفاء الفيديوهات أو overlay عليها */
+/* إذا كان هناك كود CSS مثل .video-locked أو .video-card.locked أو overlay أو أيقونة قفل، احذفه تماماً */
+
+/* مثال على ما يجب حذفه (إن وجد):
+.video-card.locked::after,
+.video-locked,
+.lock-icon,
+.video-card .lock-overlay {
+  display: none !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+*/
+
+/* --- Welcome Page Specific Styles and Animations (Scoped) --- */
+
+/* New keyframes for welcome page animations */
+@keyframes scaleIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    0% { transform: translateX(-100px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    0% { transform: translateX(100px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    80% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+@keyframes buttonPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(33, 150, 243, 0.7); }
+    100% { transform: scale(1); }
+}
+
+/* Ensure body has full height and background for centering the welcome container */
+body {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Reusing dashboard background */
+    overflow: hidden; /* Prevent scrollbars from animations */
+}
+
+/* Enhanced welcome-container styling */
+.welcome-page .welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* height: 100vh;  Removed as body handles full height and centering */
+    text-align: center;
+    background: rgba(255, 255, 255, 0.15); /* Semi-transparent white background */
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(30, 60, 114, 0.2); /* Stronger shadow */
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px;
+    max-width: 500px; /* Limit width for better appearance */
+    margin: 0 auto; /* Center horizontally */
+    animation: scaleIn 0.8s ease-out forwards; /* Initial animation for container */
+}
+
+.welcome-page .welcome-container h1 {
+    margin-bottom: 20px;
+    font-size: 2.5em; /* Slightly larger heading */
+    color: #fff; /* White text for contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: slideInLeft 0.8s ease-out forwards; /* Animation for heading */
+    animation-delay: 0.3s;
+}
+
+.welcome-page .welcome-container p {
+    font-size: 1.1em;
+    color: #e0e0e0; /* Lighter text for paragraph */
+    margin-bottom: 30px;
+    animation: slideInRight 0.8s ease-out forwards; /* Animation for paragraph */
+    animation-delay: 0.5s;
+}
+
+.welcome-page .code-input {
+    padding: 15px 20px; /* Larger padding */
+    border: 2px solid #6dd5ed; /* Blue border */
+    border-radius: 10px; /* More rounded corners */
+    margin-bottom: 20px; /* More space */
+    font-size: 1.1em;
+    width: 80%; /* Adjust width */
+    max-width: 300px;
+    background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+    color: #1e3c72;
+    transition: all 0.3s ease;
+   /* Animation for input */
+    animation-delay: 0.7s;
+}
+
+.welcome-page .code-input::placeholder {
+    color: #999;
+}
+
+.welcome-page .code-input:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 15px rgba(33, 150, 243, 0.5);
+}
+
+.welcome-page .submit-button { /* Scoped this selector */
+    padding: 15px 30px; /* Larger padding */
+    background: linear-gradient(90deg, #2196f3 0%, #6dd5ed 100%); /* Gradient background */
+    color: white;
+    border: none;
+    border-radius: 10px; /* More rounded corners */
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+     /* Animation for button */
+    animation-delay: 0.9s;
+}
+
+.welcome-page .submit-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(33, 150, 243, 0.8);
+    animation: buttonPulse 1s infinite; /* Pulse animation on hover */
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff; /* White text for messages */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    animation: fadeInUp 0.5s ease-out forwards; /* Animation for message */
+    animation-delay: 1.1s;
+}
+
+.welcome-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Reusing dashboard background */
+    /* overflow: hidden; Prevent scrollbars from animations */
+}
+
+/* تحسين السكرولينج للصفحة */
+html, body {
+  scroll-behavior: smooth;
+}
+
+/* الآن كل الفيديوهات ستظهر للمستخدمين بدون قفل أو طبقة حجب */
+
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 0;
+  }
+  
+  .video-grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 20px;
+  }
+  
+  .exams-section {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 16px;
+  }
+  
+  .dashboard-header {
+    padding: 20px 0 12px 0;
+    margin-bottom: 20px;
+  }
+  
+  .dash-title {
+    font-size: 2rem;
+  }
+  
+  .dash-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 950px) {
+  .main-back-btn {
+    left: 5px;
+    top: 5px;
+    padding: 4px 4px;
+    font-size: 0.6rem;
+  }
+}
+
+/* إصلاح مشكلة السكرولينج في المتصفحات المختلفة */
+* {
+  box-sizing: border-box;
+}
+
+.logout-btn {
+  background: #d32f2f;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn:hover {
+  background: #b71c1c;
+  color: #fff;
+}
+
+.video-wrapper { position: relative; }
+.video-watermark-inside {
+  position: absolute;
+  bottom: 12px;
+  right: 18px;
+  font-size: 1.2em;
+  color: rgba(255,255,255,0.28);
+  font-weight: bold;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  text-shadow: 1px 1px 8px #00000044;
+  animation: watermarkMoveInsideFull 12s linear infinite alternate;
+}
+@keyframes watermarkMoveInsideFull {
+  0% { bottom: 12px; right: 18px; }
+  20% { top: 12px; right: 18px; bottom: auto; left: auto; }
+  40% { top: 12px; left: 18px; bottom: auto; right: auto; }
+  60% { bottom: 12px; left: 18px; top: auto; right: auto; }
+  80% { bottom: 50%; right: 50%; top: auto; left: auto; }
+  100% { bottom: 12px; right: 18px; top: auto; left: auto; }
+}
+/* 
+.fullscreen-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(30,60,114,0.18);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.2s, transform 0.2s;
+}
+.fullscreen-btn:hover {
+  background: #2193b0;
+  color: #fff;
+  transform: scale(1.08);
+} */
+
+#fullscreen-watermark {
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  font-size: 2.2em;
+  color: rgba(255,255,255,0.22);
+  font-weight: bold;
+  pointer-events: none;
+  user-select: none;
+  z-index: 9999;
+  text-shadow: 1px 1px 8px #00000044;
+  animation: watermarkMoveOverlay 10s linear infinite alternate;
+  transition: opacity 0.3s;
+}
+@keyframes watermarkMoveOverlay {
+  0% { top: 10%; left: 10%; }
+  25% { top: 60%; left: 15%; }
+  50% { top: 70%; left: 60%; }
+  75% { top: 20%; left: 70%; }
+  100% { top: 10%; left: 10%; }
+}
+
+/* فلتر المواد - تحسين شكل السلكت والزر */
+.subject-select {
+  min-width: 180px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid #cfd8dc;
+  background: linear-gradient(90deg, #fff, #e3f2fd);
+  color: #222;
+  font-size: 1.08em;
+  box-shadow: 0 2px 8px rgba(30,60,114,0.07);
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.subject-select:focus {
+  outline: none;
+  border-color: #2193b0;
+  box-shadow: 0 4px 16px 0 #2193b033;
+}
+.subject-select:hover {
+  box-shadow: 0 4px 16px 0 #2193b033;
+}
+.subject-filter-btn {
+  padding: 8px 24px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
+  color: white;
+  cursor: pointer;
+  font-size: 1.08em;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(30,60,114,0.09);
+  transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+  margin-right: 8px;
+}
+.subject-filter-btn:hover, .subject-filter-btn:focus {
+  background: linear-gradient(90deg, #6dd5ed, #2193b0);
+  box-shadow: 0 6px 18px 0 #2193b055;
+  transform: translateY(-2px) scale(1.04);
+}
+
+/* fade-in-up للفلتر */
+.filter-container.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+  animation-delay: 0.6s;
+}

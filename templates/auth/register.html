@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Register - Knowledge Center</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}"> -->
+    <link rel="stylesheet" href="../../static/css/register.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <h2 class="fade-in">Create your account</h2>
+    <form id="registerForm" class="form-animate">
+      <div class="input-group">
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="name" placeholder="اسم الطالب" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <input type="text" name="parent_name" placeholder="اسم ولي الأمر" required class="input-animate"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="student_id" placeholder="رقم الطالب" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <input type="text" name="national_id" id="nationalId" placeholder="الرقم القومي" required class="input-animate"/>
+            <div id="nationalIdError" class="error-message" style="display:none;color:#d32f2f;font-size:0.9em;margin-top:4px;"></div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="parent_phone" placeholder="رقم ولي الأمر" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" placeholder="البريد الإلكتروني" required class="input-animate"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" name="address" placeholder="العنوان" required class="input-animate"/>
+          </div>
+          <div class="form-group">
+            <select name="grade_id" id="gradeSelect" required class="input-animate">
+              <option value="">اختر المرحلة</option>
+              <!-- سيتم ملء هذا من قاعدة البيانات -->
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <select name="system" id="systemSelect" class="input-animate" style="margin-bottom: 10px;">
+              <option value="">اختر النظام التعليمي</option>
+              <option value="American">النظام الأمريكي</option>
+              <option value="IG">النظام البريطاني (IG)</option>
+              <option value="Technical">المدرسة الفنية</option>
+              <option value="National">النظام المصري</option>
+              <option value="Azhar">النظام الأزهري</option>
+            </select>
+          </div>
+          <div class="form-group" id="categoryGroup" style="display: none;">
+            <select name="category" id="categorySelect" class="input-animate">
+              <option value="">اختر القسم</option>
+              <option value="عام">عام</option>
+              <option value="لغات">لغات</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="position:relative;">
+            <input type="text" name="username" id="username" placeholder="اسم المستخدم" required class="input-animate" autocomplete="off"/>
+            <div id="usernameError" class="error-message" style="display:none;color:#d32f2f;font-size:0.9em;margin-top:4px;"></div>
+            <div id="usernameSuggestions" style="display:none;position:absolute;top:100%;left:0;width:100%;background:#fff;border:1px solid #90caf9;border-radius:8px;z-index:10;font-size:0.98em;"></div>
+          </div>
+          <div class="form-group">
+            <label style="margin-bottom:4px;display:block;font-size:0.98em;color:#1976d2;">Gender</label>
+            <label style="margin-right:12px;">
+              <input type="radio" name="gender" value="male" required> Male
+            </label>
+            <label>
+              <input type="radio" name="gender" value="female" required> Female
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group password-wrapper">
+            <input type="password" name="password" id="password" placeholder="كلمة المرور" required class="input-animate"/>
+            <span class="toggle-password">
+              <!-- <i class="fa-regular fa-eye" id="togglePassword"></i> -->
+            </span>
+          </div>
+          <div class="form-group password-wrapper">
+            <input type="password" name="confirm_password" id="confirmPassword" placeholder="تأكيد كلمة المرور" required class="input-animate"/>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn-animate">Register</button>
+      <p class="register-link">Already have an account? <a href="{{ url_for('auth.login_page') }}">login here</a></p>
+    </form>
+  </div>
+  <script>
+    // إظهار/إخفاء الباسورد
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    if (togglePassword && password) {
+      togglePassword.addEventListener('click', function () {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+      });
+    }
+
+    // قائمة أرقام قومية مسجلة بالفعل (مثال تجريبي، في الحقيقة يجب جلبها من الباك إند)
+    const existingNationalIds = ["12345678901234", "29801010123456"];
+
+    const nationalIdInput = document.getElementById('nationalId');
+    const nationalIdError = document.getElementById('nationalIdError');
+    const form = document.getElementById('registerForm');
+
+    if (nationalIdInput && nationalIdError) {
+      nationalIdInput.addEventListener('input', function() {
+        const val = nationalIdInput.value.trim();
+        let error = "";
+        if (!/^\d{14}$/.test(val)) {
+          error = "National ID must be exactly 14 digits.";
+        } else if (existingNationalIds.includes(val)) {
+          error = "This National ID is already registered.";
+        }
+        nationalIdError.textContent = error;
+        nationalIdError.style.display = error ? "block" : "none";
+        nationalIdInput.style.borderColor = error ? "#d32f2f" : "";
+      });
+    }
+
+    // قائمة يوزرنيمات مسجلة بالفعل (مثال تجريبي)
+    const existingUsernames = ["ahmed123", "student2024", "mona_ali"];
+
+    const usernameInput = document.getElementById('username');
+    const usernameError = document.getElementById('usernameError');
+    const usernameSuggestions = document.getElementById('usernameSuggestions');
+    const firstNameInput = document.querySelector('input[name="first_name"]');
+    const lastNameInput = document.querySelector('input[name="last_name"]');
+
+    function generateSuggestions(base) {
+      const baseClean = base.replace(/\s+/g, '').toLowerCase();
+      let suggestions = [];
+      if (!baseClean) return [];
+      for (let i = 0; i < 5; i++) {
+        let suggestion = baseClean;
+        if (i === 1) suggestion += Math.floor(Math.random() * 1000);
+        if (i === 2) suggestion += "_" + (lastNameInput ? lastNameInput.value.toLowerCase() : "");
+        if (i === 3) suggestion += (new Date().getFullYear() % 100);
+        if (i === 4) suggestion += Math.floor(Math.random() * 900 + 100);
+        if (!existingUsernames.includes(suggestion) && !suggestions.includes(suggestion) && suggestion.length > 3) {
+          suggestions.push(suggestion);
+        }
+      }
+      return suggestions;
+    }
+
+    function showUsernameSuggestions() {
+      const base = usernameInput.value || (firstNameInput ? firstNameInput.value : "");
+      const suggestions = generateSuggestions(base);
+      if (suggestions.length) {
+        usernameSuggestions.innerHTML = suggestions.map(s => `<div class="username-suggestion" style="padding:6px 12px;cursor:pointer;">${s}</div>`).join('');
+        usernameSuggestions.style.display = "block";
+        // عند الضغط على اقتراح
+        usernameSuggestions.querySelectorAll('.username-suggestion').forEach(div => {
+          div.onclick = () => {
+            usernameInput.value = div.textContent;
+            usernameSuggestions.style.display = "none";
+            usernameInput.dispatchEvent(new Event('input'));
+          };
+        });
+      } else {
+        usernameSuggestions.style.display = "none";
+      }
+    }
+
+    // تحقق من اليوزرنيم
+    if (usernameInput) {
+      usernameInput.addEventListener('input', function() {
+        const val = usernameInput.value.trim().toLowerCase();
+        let error = "";
+        if (val.length < 4) {
+          error = "Username must be at least 4 characters.";
+        } else if (existingUsernames.includes(val)) {
+          error = "This username is already taken.";
+          showUsernameSuggestions();
+        } else {
+          usernameSuggestions.style.display = "none";
+        }
+        usernameError.textContent = error;
+        usernameError.style.display = error ? "block" : "none";
+        usernameInput.style.borderColor = error ? "#d32f2f" : "";
+        // لو الاسم مش متكرر لكن قصير، برضه طلع اقتراحات
+        if (!error || error.includes("taken")) showUsernameSuggestions();
+      });
+      // إظهار اقتراحات عند كتابة الاسم الأول أو الأخير
+      if (firstNameInput) firstNameInput.addEventListener('input', showUsernameSuggestions);
+      if (lastNameInput) lastNameInput.addEventListener('input', showUsernameSuggestions);
+      // إخفاء الاقتراحات عند فقدان التركيز
+      usernameInput.addEventListener('blur', () => setTimeout(() => { usernameSuggestions.style.display = "none"; }, 200));
+    }
+
+    // معالجة إرسال الفورم
+    if (form) {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // التحقق من صحة البيانات
+        const val = nationalIdInput.value.trim();
+        let error = "";
+        if (!/^\d{14}$/.test(val)) {
+          error = "National ID must be exactly 14 digits.";
+        } else if (existingNationalIds.includes(val)) {
+          error = "This National ID is already registered.";
+        }
+        if (error) {
+          nationalIdError.textContent = error;
+          nationalIdError.style.display = "block";
+          nationalIdInput.style.borderColor = "#d32f2f";
+          return;
+        }
+
+        // التحقق من اليوزرنيم
+        const usernameVal = usernameInput.value.trim().toLowerCase();
+        let usernameErr = "";
+        if (usernameVal.length < 4) {
+          usernameErr = "Username must be at least 4 characters.";
+        } else if (existingUsernames.includes(usernameVal)) {
+          usernameErr = "This username is already taken.";
+        }
+        if (usernameErr) {
+          usernameError.textContent = usernameErr;
+          usernameError.style.display = "block";
+          usernameInput.style.borderColor = "#d32f2f";
+          return;
+        }
+
+        // التحقق من تطابق كلمات المرور
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        if (password !== confirmPassword) {
+          alert('كلمات المرور غير متطابقة');
+          return;
+        }
+
+        // جمع البيانات من الفورم
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert(result.message);
+            window.location.href = result.redirect;
+          } else {
+            alert(result.error || 'حدث خطأ أثناء التسجيل');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('حدث خطأ في الاتصال بالخادم');
+        }
+      });
+    }
+
+    // تحميل المراحل عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, starting grade loading...');
+      loadGrades();
+    });
+
+    // جلب المراحل من قاعدة البيانات
+    async function loadGrades() {
+      try {
+        console.log('Fetching grades from API...');
+        const response = await fetch('/api/grades');
+        console.log('API Response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const gradesArray = await response.json();
+        console.log('Grades data received:', gradesArray);
+        
+        // إعادة تنظيم البيانات حسب النظام
+        const gradesData = {};
+        gradesArray.forEach(grade => {
+          if (grade.system === 'National') {
+            if (!gradesData.National) gradesData.National = {};
+            if (!gradesData.National[grade.category]) gradesData.National[grade.category] = [];
+            gradesData.National[grade.category].push(grade);
+          } else {
+            if (!gradesData[grade.system]) gradesData[grade.system] = [];
+            gradesData[grade.system].push(grade);
+          }
+        });
+        window.gradesData = gradesData;
+        // إعداد event listeners
+        setupGradeSelection();
+        // تحميل المراحل الأمريكية كمراحل افتراضية
+        loadDefaultGrades();
+        
+      } catch (error) {
+        console.error('Error loading grades:', error);
+        // إضافة مراحل افتراضية في حالة الخطأ
+        loadFallbackGrades();
+      }
+    }
+
+    // تحميل المراحل الافتراضية من قاعدة البيانات
+    function loadDefaultGrades() {
+      const gradeSelect = document.getElementById('gradeSelect');
+      if (!gradeSelect || !window.gradesData) {
+        console.log('Grade select not found or no grades data');
+        return;
+      }
+      
+      // مسح المراحل الحالية
+      gradeSelect.innerHTML = '<option value="">اختر المرحلة</option>';
+      
+      // تحميل المراحل الأمريكية كمراحل افتراضية
+      const americanGrades = window.gradesData.American || [];
+      console.log('Loading American grades:', americanGrades.length);
+      
+      americanGrades.forEach(grade => {
+        const option = document.createElement('option');
+        option.value = grade.id;
+        option.textContent = grade.grade;
+        gradeSelect.appendChild(option);
+      });
+      
+      console.log(`Loaded ${americanGrades.length} American grades as default`);
+    }
+
+    // تحميل مراحل احتياطية في حالة الخطأ
+    function loadFallbackGrades() {
+      const gradeSelect = document.getElementById('gradeSelect');
+      if (!gradeSelect) return;
+      
+      const defaultGrades = [
+        {id: 1, grade: 'Grade 1'}, {id: 2, grade: 'Grade 2'}, {id: 3, grade: 'Grade 3'},
+        {id: 4, grade: 'Grade 4'}, {id: 5, grade: 'Grade 5'}, {id: 6, grade: 'Grade 6'},
+        {id: 7, grade: 'Grade 7'}, {id: 8, grade: 'Grade 8'}, {id: 9, grade: 'Grade 9'},
+        {id: 10, grade: 'Grade 10'}, {id: 11, grade: 'Grade 11'}, {id: 12, grade: 'Grade 12'}
+      ];
+      
+      defaultGrades.forEach(grade => {
+        const option = document.createElement('option');
+        option.value = grade.id;
+        option.textContent = grade.grade;
+        gradeSelect.appendChild(option);
+      });
+      
+      console.log('Loaded fallback grades');
+    }
+
+    // إعداد اختيار المراحل
+    function setupGradeSelection() {
+      const systemSelect = document.getElementById('systemSelect');
+      const categorySelect = document.getElementById('categorySelect');
+      const categoryGroup = document.getElementById('categoryGroup');
+      const gradeSelect = document.getElementById('gradeSelect');
+
+      if (!systemSelect || !categorySelect || !categoryGroup || !gradeSelect) {
+        console.error('Required elements not found for grade selection setup');
+        return;
+      }
+
+      console.log('Setting up grade selection event listeners...');
+
+      // عند تغيير النظام
+      systemSelect.addEventListener('change', function() {
+        const selectedSystem = this.value;
+        console.log('System changed to:', selectedSystem);
+        
+        // إظهار/إخفاء قسم القسم
+        if (selectedSystem === 'National') {
+          categoryGroup.style.display = 'block';
+          categorySelect.value = '';
+        } else {
+          categoryGroup.style.display = 'none';
+          categorySelect.value = '';
+        }
+        
+        // تحديث المراحل
+        updateGrades(selectedSystem, categorySelect.value);
+      });
+
+      // عند تغيير القسم
+      categorySelect.addEventListener('change', function() {
+        const selectedSystem = systemSelect.value;
+        const selectedCategory = this.value;
+        console.log('Category changed to:', selectedCategory);
+        updateGrades(selectedSystem, selectedCategory);
+      });
+      
+      console.log('Grade selection event listeners set up successfully');
+    }
+
+    // تحديث المراحل حسب النظام والقسم
+    function updateGrades(system, category) {
+      const gradeSelect = document.getElementById('gradeSelect');
+      
+      if (!gradeSelect) {
+        console.error('Grade select element not found');
+        return;
+      }
+      
+      // مسح المراحل الحالية
+      gradeSelect.innerHTML = '<option value="">اختر المرحلة</option>';
+      
+      if (!system || !window.gradesData) {
+        console.log('No system selected or grades data not available');
+        return;
+      }
+      
+      console.log(`Updating grades for system: ${system}, category: ${category}`);
+      
+      let grades = [];
+      
+      if (system === 'American') {
+        grades = window.gradesData.American || [];
+      } else if (system === 'IG') {
+        grades = window.gradesData.IG || [];
+      } else if (system === 'Technical') {
+        grades = window.gradesData.Technical || [];
+      } else if (system === 'National') {
+        if (category === 'عام') {
+          grades = window.gradesData.National?.عام || [];
+        } else if (category === 'لغات') {
+          grades = window.gradesData.National?.لغات || [];
+        }
+      } else if (system === 'Azhar') {
+        grades = window.gradesData.Azhar || [];
+      }
+      
+      console.log(`Found ${grades.length} grades for system: ${system}, category: ${category}`);
+      
+      // إضافة المراحل للقائمة
+      grades.forEach(grade => {
+        const option = document.createElement('option');
+        option.value = grade.id;
+        option.textContent = grade.grade;
+        gradeSelect.appendChild(option);
+      });
+      
+      console.log(`Updated grade select with ${grades.length} options`);
+    }
+  </script>
+</body>
+</html>

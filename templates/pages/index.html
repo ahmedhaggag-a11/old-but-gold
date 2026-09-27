@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Education Center</title>
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+</head>
+<body>
+    
+    <header>
+        <nav>
+            <div class="logo-pic-container">
+                <span class="logo">KNOWLEDGE</span>
+                <span class="pic">
+                    <img src="../../static/images/icon.jpg" alt="logo-pic">
+                </span>
+            </div>
+            <ul class="main-nav">
+        
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="{{ url_for('books_page') }}" id="bookBtn">Books Store</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('welcome') }}" id="dashBtn">Dashboard</a></li>
+                {% endif %}
+            </ul>
+
+            <div class="user-menu" tabindex="0">
+                <span id="navUsername" class="user-name-nav">
+                    {% if current_user.is_authenticated %}
+                        {{ current_user.username }}
+                    {% else %}
+                        Username
+                    {% endif %}
+                </span>
+                <div class="user-dropdown">
+                    {% if current_user.is_authenticated %}
+                        <div id="codeStatusNav" style="padding: 8px 12px; font-size: 0.9em; border-bottom: 1px solid #eee; display: none;">
+                            <i class="fas fa-key"></i> <span id="codeStatusTextNav"></span>
+                        </div>
+                        <a href="{{ url_for('profile') }}" id="profileBtn"><i class="fa-regular fa-user"></i> Profile</a>
+                        <a href="{{ url_for('change_password') }}" id="changePasswordBtn"><i class="fas fa-key"></i> Change Password</a>
+                        <a href="{{ url_for('auth.logout_page') }}" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login_page') }}" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    {% endif %}
+                </div>
+            </div>
+            <button id="darkModeToggle" title="Toggle Dark Mode">
+                <i class="fas fa-moon" id="darkIcon"></i>
+            </button>
+        </nav>
+        <div class="hero">
+            <h1>Welcome to knowledge center</h1>
+            <p>Your path to glow starts here.</p>
+            <a href="#achievements" class="cta-button"> Achievements</a>
+        </div>
+    </header>
+
+
+    <section id="home"></section>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>
+            Shaping the future of doctors and engineers since 2016 - More than just a center, we, the Knowledge family, are a beacon of academic excellence in Mansoura. We are not just a place to learn; we are a supportive community, a family working together to empower students to achieve their dreams. Our success is built on collaboration, mutual respect, and a shared passion for learning. Join the Knowledge family and embark on your journey to success! Together, we can achieve anything.
+
+        </p>
+    </section>
+
+    <section id="achievements">
+        <h2>Achievements</h2>
+        
+        <!-- إحصائيات المركز التعليمي -->
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-item" data-target="5000">
+                    <div class="stat-icon">👨‍🎓</div>
+                    <div class="stat-number" id="students-count">0</div>
+                    <div class="stat-label">طالب مسجل</div>
+                </div>
+                
+                <div class="stat-item" data-target="50">
+                    <div class="stat-icon">👨‍🏫</div>
+                    <div class="stat-number" id="teachers-count">0</div>
+                    <div class="stat-label">مدرس متخصص</div>
+                </div>
+                
+                <div class="stat-item" data-target="10">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-number" id="experience-years">0</div>
+                    <div class="stat-label">سنوات الخبرة</div>
+                </div>
+                
+                <div class="stat-item" data-target="98">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-number" id="success-rate">0</div>
+                    <div class="stat-label">% معدل النجاح</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="teachers">
+        <h2>Our heros Teachers</h2>
+        <div class="teacher-info" id="heroesTeachers">
+            <!-- سيتم ملء هذا من قاعدة البيانات -->
+        </div>
+    </section>
+
+    <section id="new teachers">
+        <h2>Our new deals</h2>
+        <div class="new-teacher">
+            <div class="exclusive-img">
+                <img src="../../static/images/exclusive-red-ink-stamp-free-png.png" alt="teacher">
+            </div>
+            <div class="exclusives" id="newTeachers">
+                <!-- سيتم ملء هذا من قاعدة البيانات -->
+            </div>
+            <hr>
+            <div class="exclusive-info">
+                <h2>Exclusive Offers</h2>
+                <div class="offers-flip-cards">
+                  <div class="flip-card">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <i class="fas fa-percent"></i>
+                        <h4>twins offer</h4>
+                      </div>
+                      <div class="flip-card-back">
+                        <p> خصم للتؤأم بدل 2 يبقي 1.5 في كل المواد</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <i class="fas fa-user-friends"></i>
+                        <h4>friends offer</h4>
+                      </div>
+                      <div class="flip-card-back">
+                        <p>احجز انت و اصحابك و هتاخد خصم علي دروسك</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <i class="fas fa-gift"></i>
+                        <h4>presents</h4>
+                      </div>
+                      <div class="flip-card-back">
+                        <p>جوائز شهرية للطلاب الأعلى في الدرجات</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flip-card">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h4>free sessions </h4>
+                      </div>
+                      <div class="flip-card-back">
+                        <p>حصص مراجعات مجانية للطلاب </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="auth-buttons" id="authButtons" {% if current_user.is_authenticated %}style="display: none;"{% endif %}>
+                    <a href="{{ url_for('auth.login_page') }}" class="cta-button login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{{ url_for('auth.register_page') }}" class="cta-button signin-btn"><i class="fas fa-user-plus"></i> Sign In</a>
+                </div>
+                <div class="welcome-message" id="welcomeMessage" {% if not current_user.is_authenticated %}style="display: none;"{% endif %}>
+                    <h3>مرحباً {{ current_user.username if current_user.is_authenticated else 'عزيزي الطالب' }}!</h3>
+                    <p>يمكنك الوصول إلى جميع المحتويات من خلال لوحة التحكم</p>
+                    <a href="{{ url_for('welcome') }}" class="cta-button"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+            <a href="tel:20+1010889925"><i class="fas fa-phone"></i> 01034273280</a>
+            <a href="https://www.facebook.com/profile.php?id=100063929471823&mibextid=ZbWKwL" class="social-icon">facebook: knowledge center <i class="fab fa-facebook"></i></a>
+            <a href="https://wa.me/01034273280" class="social-icon">whatsapp: 01034273280 <i class="fab fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/knowledge.center2016?igsh=MWFhdzc0a2RybnY5aA==" class="social-icon">instagram: knowledge center <i class="fab fa-instagram"></i></a>
+            <p>Address:mansoura, suez canal beside kfc </p>
+            <p>Address:mansoura, ahmed maher in front of 6 october street under elmazraa market</p>
+            <p>Address:mansoura, torel elshaheed mohamed elsabaa behind suez bank</p>
+
+            <!-- ... -->
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 knowledge. All rights reserved.</p>
+    </footer>
+
+    <script src="../../static/js/script.js"></script>
+    
+
+</body>
+</html>

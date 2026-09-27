@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Login - Knowledge Center</title>
+  <link rel="stylesheet" href="../../static/css/login.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="login-page">
+
+  <div class="login-container">
+    <h2 class="fade-in">Welcome to knowledge</h2>
+
+    <div id="loginMessage" class="message" style="display: none;"></div>
+  
+    <form id="loginForm" class="form-animate">
+      <div class="input-group">
+        <div class="form-group">
+          <input type="text" name="username" placeholder="Username" required class="input-animate"/>
+        </div>
+        <div class="form-group password-wrapper">
+          <input type="password" name="password" id="password" placeholder="Password" required class="input-animate"/>
+          <span class="toggle-password">
+            <!-- <i class="fa-regular fa-eye" id="togglePassword"></i> -->
+          </span>
+        </div>
+        <div class="form-group">
+          
+        </div>
+      </div>
+      <button type="submit" class="btn-animate">Login</button>
+      <p class="register-link">Don't have an account? <a href="{{ url_for('auth.register_page') }}">Register here</a></p>
+      <p class="forgot-password"><a href="{{ url_for('auth.forgot_password') }}">Forgot Password?</a></p>
+      <p class="terms">By logging in, you agree to our <a href="{{ url_for('terms') }}">Terms of Service</a> and <a href="{{ url_for('terms') }}">Privacy Policy</a>.</p>
+    </form>
+  </div>
+  <script>
+  // Login form handling
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const messageDiv = document.getElementById('loginMessage');
+    
+    // Show loading message
+    messageDiv.textContent = 'جاري تسجيل الدخول...';
+    messageDiv.className = 'message info';
+    messageDiv.style.display = 'block';
+    
+    console.log('Attempting login with:', {
+      username: formData.get('username'),
+      password: formData.get('password')
+    });
+    
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.get('username'),
+          password: formData.get('password')
+        })
+      });
+      
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (response.ok) {
+        messageDiv.textContent = data.message;
+        messageDiv.className = 'message success';
+        messageDiv.style.display = 'block';
+        
+        // Redirect based on user type
+        setTimeout(() => {
+          if (data.is_admin) {
+            console.log('Redirecting admin to workspace');
+            window.location.href = '/admin/workspace';
+          } else {
+            console.log('Redirecting user to index');
+            window.location.href = '/';
+          }
+        }, 1000);
+      } else {
+        messageDiv.textContent = data.error;
+        messageDiv.className = 'message error';
+        messageDiv.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      messageDiv.textContent = 'حدث خطأ في الاتصال بالخادم';
+      messageDiv.className = 'message error';
+      messageDiv.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

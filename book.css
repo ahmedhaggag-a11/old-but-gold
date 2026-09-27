@@ -1,4 +1,4 @@
-* {
+/* * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -21,7 +21,7 @@ body {
 }
 
 #searchInput {
-  width: 40%;
+  width: 80%;
   max-width: 100%;
   padding: 10px 38px 10px 38px;
   border-radius: 22px;
@@ -150,7 +150,7 @@ body {
 }
 
 /* Buy Modal Styles */
-.buy-modal {
+/* .buy-modal {
   display: none;
   position: fixed;
   z-index: 2000;
@@ -254,7 +254,7 @@ body {
 }
 
 /* Animations */
-@keyframes fadeInUp {
+/* @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(40px);}
   to { opacity: 1; transform: none;}
 }
@@ -265,4 +265,4 @@ body {
 @keyframes fadeIn {
   from { opacity: 0;}
   to { opacity: 1;}
-}
+} */ 

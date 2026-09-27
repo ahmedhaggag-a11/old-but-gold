@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Videos</title>
+  <link rel="stylesheet" target="_" href="../../static/css/dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/358045773_695100129297630_6681247707211595226_n.jpg') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    .exam-link {
+      display: inline-block;
+      margin-top: 10px;
+      background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+      color: #fff !important;
+      padding: 8px 22px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .exam-link:hover {
+      background: linear-gradient(90deg, #6dd5ed 0%, #2193b0 100%);
+  transform: scale(1.07);
+  box-shadow: 0 4px 18px 0 #2193b055;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #fff;
+      font-size: 1.2em;
+    }
+    
+    .no-content {
+      text-align: center;
+      padding: 40px;
+      color: #fff;
+      font-size: 1.1em;
+    }
+
+    /* كروت الشيتات */
+    .sheet-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .sheet-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .sheet-card h3 {
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .sheet-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      color: #ccc;
+      font-size: 0.9em;
+    }
+
+    .download-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #4CAF50, #45a049);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 1em;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn:hover {
+      background: linear-gradient(90deg, #45a049, #4CAF50);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    }
+
+    .download-btn i {
+      margin-left: 8px;
+    }
+
+    /* تحسين مظهر الصور المصغرة للفيديوهات */
+    .video-card video {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      max-height: 300px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .video-card video:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    /* تحسين مظهر كروت الفيديوهات */
+    .video-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      text-align: center;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .video-card h3 {
+      color: #fff;
+      margin-top: 15px;
+      font-size: 1.3em;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* تحسين عرض الفيديوهات في الشبكة */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      padding: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .videos-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .video-card video {
+        max-width: 100%;
+        max-height: 250px;
+      }
+    }
+
+    /* Online Exams Styles */
+    .dashboard-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dashboard-section h3 {
+      color: #fff;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .dashboard-section h3 i {
+      color: #6dd5ed;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .exam-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .exam-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .exam-icon {
+      font-size: 3em;
+      color: #6dd5ed;
+      margin-bottom: 15px;
+    }
+
+    .exam-card h3 {
+      color: #fff;
+      font-size: 1.3em;
+      margin-bottom: 15px;
+    }
+
+    .exam-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .exam-info span {
+      color: #e0e0e0;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .exam-info i {
+      color: #6dd5ed;
+      width: 16px;
+    }
+
+    .start-exam-btn {
+      background: linear-gradient(135deg, #1635be 0%, #2b34b0 100%);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .start-exam-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+
+    .no-content {
+      color: #e0e0e0;
+      text-align: center;
+      font-size: 1.1em;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+  <div id="fullscreen-watermark" style="display:none;"></div>
+  <div class="dashboard-container">
+
+  <header class="dashboard-header">
+  <div class="header-left">
+    <a href="{{ url_for('index') }}" class="main-back-btn">
+      <i class="fas fa-home"></i> main page
+    </a>
+  </div>
+  <div class="header-center">
+    <h1 class="dash-title">🎬 Knowledge Dashboard</h1>
+    <p class="dash-subtitle">All your course resources in one place</p>
+    <p id="userGrade" style="color: #6dd5ed; margin: 5px 0; font-size: 1.1em;"></p>
+    <div id="codeStatus" style="width:50% ; display:inline-block ; margin: 10px 0; padding: 8px 15px; border-radius: 8px; font-size: 0.9em;">
+      <i class="fas fa-key"></i> <span id="codeStatusText"></span>
+    </div>
+  </div>
+  <!-- <div class="header-right">
+    <a href="{{ url_for('exam') }}" class="exam-link">
+      <i class="fas fa-pen"></i> go to exam page
+    </a>
+  </div> -->
+</header>
+
+  <!-- السلايدر العلوي -->
+  <div class="dashboard-slider">
+    <button class="slider-tab active" id="videosTab">Videos</button>
+    <button class="slider-tab" id="examsTab">Sheets</button>
+  </div>
+
+  <!-- سيرش بار مشترك -->
+  <div class="search-bar-container">
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <i class="fa fa-search"></i>
+  </div>
+  
+  <!-- فلتر المواد -->
+  <div class="filter-container fade-in-up" style="text-align: center; margin: 20px 0; animation-delay: 0.6s;">
+    <select id="subjectFilter" class="subject-select" style="min-width:180px; padding: 8px 18px; border-radius: 12px; border: 1px solid #cfd8dc; margin-right: 10px; background: linear-gradient(90deg, #fff, #e3f2fd); color: #222; font-size: 1.08em; box-shadow: 0 2px 8px rgba(30,60,114,0.07); transition: box-shadow 0.3s;">
+      <option value="">جميع المواد</option>
+    </select>
+    <button onclick="filterVideosBySubject()" class="subject-filter-btn" style="padding: 8px 24px; border-radius: 12px; border: none; background: linear-gradient(90deg, #2193b0, #6dd5ed); color: white; cursor: pointer; font-size: 1.08em; font-weight: 600; box-shadow: 0 2px 8px rgba(30,60,114,0.09); transition: background 0.3s, box-shadow 0.3s;">
+      <i class="fas fa-filter"></i> filter
+    </button>
+  </div>
+
+  <!-- قسم الفيديوهات -->
+  <section class="video-grid" id="videosSection">
+    <div class="loading">جاري تحميل الفيديوهات...</div>
+  </section>
+
+  <!-- قسم الامتحانات والورق -->
+  <section class="exams-section" id="examsSection" style="display:none;">
+    <div class="loading">جاري تحميل الأوراق...</div>
+  </section>
+
+  <!-- قسم الامتحانات الإلكترونية -->
+  <div class="dashboard-section">
+    <h3><i class="fas fa-laptop"></i> الامتحانات الإلكترونية</h3>
+    <div class="section-content">
+      <div id="onlineExamsList" class="items-grid">
+        <!-- الامتحانات ستضاف هنا ديناميكياً -->
+      </div>
+    </div>
+  </div>
+
+  </div> <!-- نهاية dashboard-container -->
+
+  <script>
+    let currentUserGrade = null;
+    
+    // قائمة المواد حسب النظام
+    const SUBJECTS_BY_SYSTEM = {
+      'National-عام': [
+        'اللغة العربية', 'التربية الدينية', 'الرياضيات', 'العلوم', 'الدراسات الاجتماعية',
+        'اللغة الإنجليزية', 'تكنولوجيا المعلومات (ICT)', 'التربية الفنية', 'التربية الرياضية',
+        'التربية الوطنية', 'الفلسفة', 'علم النفس', 'التاريخ', 'الجغرافيا', 'الأحياء',
+        'الكيمياء', 'الفيزياء', 'الجيولوجيا', 'الرياضيات البحتة', 'الرياضيات التطبيقية',
+        'اللغة الالمانيه', 'اللغه الفرنسيه'
+      ],
+      'National-لغات': [
+        'اللغة العربية', 'التربية الدينية', 'English', 'Math (بالإنجليزي)', 'Science (بالإنجليزي)',
+        'Social Studies (بالعربي)', 'French', 'German', 'ICT', 'التربية الفنية', 'التربية الرياضية',
+        'التربية الوطنية', 'الفلسفة', 'علم النفس', 'History', 'Geography', 'Biology',
+        'Chemistry', 'Physics', 'Geology', 'Pure Math', 'Applied Math'
+      ],
+      'IG': [
+        'English as First/Second Language', 'Mathematics (Core/Extended)', 'Biology', 'Chemistry',
+        'Physics', 'Computer Science', 'ICT', 'Business Studies', 'Economics', 'Accounting',
+        'History', 'Geography', 'Art & Design', 'French / German / Spanish',
+        'Environmental Management', 'Global Perspectives', 'Psychology', 'Sociology', 'Arabic', 'Religion'
+      ],
+      'American': [
+        'English', 'Math', 'Science', 'Social Studies', 'Computer / ICT', 'Physical Education',
+        'Art', 'Music', 'Health', 'Arabic', 'Religion', 'French / German / Spanish', 'Biology',
+        'Chemistry', 'Physics', 'Algebra 1', 'Geometry', 'Algebra 2', 'Pre-Calculus / Statistics',
+        'Psychology', 'Economics', 'History', 'Government', 'Electives'
+      ],
+      'Azhar': [
+        'القرآن الكريم', 'الحديث', 'التفسير', 'الفقه', 'التوحيد / العقيدة', 'النحو', 'الصرف',
+        'البلاغة', 'الأدب والنصوص', 'اللغة العربية', 'التربية الإسلامية', 'اللغة الإنجليزية',
+        'الرياضيات', 'العلوم', 'الدراسات الاجتماعية', 'الفلسفة', 'المنطق', 'الأحياء',
+        'الكيمياء', 'الفيزياء', 'الجيولوجيا', 'التربية الوطنية', 'التربية الفنية',
+        'التربية الرياضية', 'الحاسب الآلي'
+      ],
+      'Technical': [
+        'اللغة العربية', 'التربية الدينية', 'اللغة الإنجليزية', 'الرياضيات', 'الفيزياء (في الصناعي)',
+        'الكيمياء (في الصناعي والزراعي)', 'الأحياء (في الزراعي)', 'مبادئ التخصص (كهرباء / ميكانيكا / محاسبة / زراعة...)',
+        'تدريبات عملية', 'التربية الوطنية', 'الحاسب الآلي', 'الاقتصاد', 'مبادئ الإدارة', 'دراسات فنية / تطبيقية حسب المجال'
+      ]
+    };
+
+    // تحديث المواد في الفلتر حسب نظام الطالب
+    function updateSubjectsForStudent(system, category) {
+      const subjectFilter = document.getElementById('subjectFilter');
+      if (!subjectFilter) return;
+      let key = system;
+      if (system === 'National') key += '-' + (category || 'عام');
+      const subjects = SUBJECTS_BY_SYSTEM[key] || [];
+      subjectFilter.innerHTML = '<option value="">جميع المواد</option>';
+      subjects.forEach(subj => {
+        const option = document.createElement('option');
+        option.value = subj;
+        option.textContent = subj;
+        subjectFilter.appendChild(option);
+      });
+    }
+
+    // التحقق من تسجيل الدخول وجلب بيانات المستخدم
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/check-auth');
+        if (response.ok) {
+          const userData = await response.json();
+          window.currentUsername = userData.username || '';
+          currentUserGrade = userData.grade_id;
+          document.getElementById('userGrade').textContent = `مرحلتك: ${userData.grade_name || 'غير محدد'}`;
+          // تحديث المواد حسب النظام
+          updateSubjectsForStudent(userData.system, userData.category);
+          
+          // التحقق من حالة الكود
+          await checkCodeStatus();
+          
+          loadContent();
+        } else {
+          // إذا لم يكن مسجل دخول، توجيه لصفحة تسجيل الدخول
+          window.location.href = '/login';
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+        window.location.href = '/login';
+      }
+    }
+    
+    // التحقق من حالة الكود
+    async function checkCodeStatus() {
+      try {
+        const response = await fetch('/api/check-code-status');
+        const codeData = await response.json();
+        const codeStatusDiv = document.getElementById('codeStatus');
+        const codeStatusText = document.getElementById('codeStatusText');
+        
+        if (codeData.is_admin) {
+          // الأدمن لا يحتاج كود
+          codeStatusDiv.style.display = 'none';
+          return;
+        }
+        
+        if (codeData.has_valid_code) {
+          // كود صالح
+          codeStatusDiv.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
+          codeStatusDiv.style.color = 'white';
+          
+          if (codeData.days_remaining !== null) {
+            if (codeData.days_remaining > 0) {
+              codeStatusText.textContent = `كود صالح - متبقي ${codeData.days_remaining} يوم`;
+            } else {
+              codeStatusText.textContent = 'كود صالح - ينتهي اليوم';
+            }
+          } else {
+            codeStatusText.textContent = 'كود صالح';
+          }
+        } else {
+          // كود غير صالح أو منتهي الصلاحية
+          codeStatusDiv.style.background = 'linear-gradient(90deg, #f44336, #d32f2f)';
+          codeStatusDiv.style.color = 'white';
+          codeStatusText.textContent = codeData.message || 'كود غير صالح';
+          
+          // إعادة توجيه لصفحة إدخال الكود
+          setTimeout(() => {
+            window.location.href = '/welcome';
+          }, 3000);
+        }
+        
+        // codeStatusDiv.style.display = 'block';
+        
+      } catch (error) {
+        console.error('Error checking code status:', error);
+      }
+    }
+    
+    // تحميل المحتوى حسب المرحلة
+    async function loadContent() {
+      if (!currentUserGrade) return;
+      
+      // تحميل المواد أولاً
+      await loadSubjects();
+      
+      // تحميل الفيديوهات
+      await loadVideos();
+      
+      // تحميل الأوراق
+      await loadSheets();
+      
+      // تحميل الامتحانات الإلكترونية
+      await loadOnlineExams();
+    }
+    
+    // تحميل المواد الدراسية
+    async function loadSubjects() {
+      try {
+        const response = await fetch('/api/subjects');
+        const subjects = await response.json();
+        const subjectFilter = document.getElementById('subjectFilter');
+        
+        if (subjectFilter && Array.isArray(subjects)) {
+          subjects.forEach(subject => {
+            const option = document.createElement('option');
+            option.value = subject;
+            option.textContent = subject;
+            subjectFilter.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading subjects:', error);
+      }
+    }
+    
+    // تحميل الفيديوهات
+    async function loadVideos(subjectFilter = '') {
+      try {
+        let url = `/api/videos?grade_id=${currentUserGrade}`;
+        if (subjectFilter) {
+          url += `&subject=${encodeURIComponent(subjectFilter)}`;
+        }
+        
+        const response = await fetch(url);
+        const videos = await response.json();
+        const videosSection = document.getElementById('videosSection');
+        
+        if (videos.length === 0) {
+          videosSection.innerHTML = '<div class="no-content">لا توجد فيديوهات متاحة لمرحلتك</div>';
+          return;
+        }
+        
+        // عرض الفيديوهات ككروت
+        videosSection.innerHTML = `
+          <div class="videos-grid">
+            ${videos.map((video, index) => {
+              // تحديد الصورة المصغرة
+              let posterSrc = null;
+              if (video.thumbnail_path) {
+                posterSrc = video.thumbnail_path.startsWith('http') ? video.thumbnail_path : `/uploads/${video.thumbnail_path}`;
+              }
+              // كل فيديو له id مميز
+              return `
+                <div class="video-card fade-in-up ${index > 0 ? `delay-${index}` : ''}" data-subject="${video.subject || ''}">
+                  <div class="fixed-video-container">
+                    <div class="video-wrapper" style="position:relative;">
+                      <video controls controlsList="nodownload nopictureinpicture" disablePictureInPicture poster="${posterSrc}" data-video-id="${video.id}">
+                        <source src="/video/${video.id}" type="video/mp4">
+                        متصفحك لا يدعم تشغيل الفيديو.
+                      </video>
+                    </div>
+                  </div>
+                  <h3>${video.title}</h3>
+                  <p style="color: #6dd5ed; margin-top: 5px; font-size: 0.9em;">${video.subject || 'غير محدد'}</p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        
+        // بعد عرض الفيديوهات، أضف event لتسجيل المشاهدة
+        setTimeout(() => {
+          document.querySelectorAll('.video-card video').forEach(videoEl => {
+            let viewRecorded = false;
+            // عند انتهاء الفيديو بالكامل
+            videoEl.addEventListener('ended', function() {
+              if (!viewRecorded) {
+                fetch(`/api/video/${videoEl.dataset.videoId}/view`, {method: 'POST'});
+                viewRecorded = true;
+              }
+            });
+            // أو عند مشاهدة 90% من الفيديو
+            videoEl.addEventListener('timeupdate', function() {
+              if (!viewRecorded && videoEl.duration && videoEl.currentTime / videoEl.duration > 0.9) {
+                fetch(`/api/video/${videoEl.dataset.videoId}/view`, {method: 'POST'});
+                viewRecorded = true;
+              }
+            });
+          });
+        }, 100);
+        
+      } catch (error) {
+        console.error('Error loading videos:', error);
+        document.getElementById('videosSection').innerHTML = '<div class="no-content">خطأ في تحميل الفيديوهات</div>';
+      }
+    }
+    
+    // فلترة الفيديوهات حسب المادة
+    function filterVideosBySubject() {
+      const subjectFilter = document.getElementById('subjectFilter');
+      const selectedSubject = subjectFilter ? subjectFilter.value : '';
+      loadVideos(selectedSubject);
+    }
+    
+    // تحميل الأوراق
+    async function loadSheets() {
+      try {
+        const response = await fetch(`/api/sheets?grade_id=${currentUserGrade}`);
+        const sheets = await response.json();
+        const examsSection = document.getElementById('examsSection');
+        
+        if (sheets.length === 0) {
+          examsSection.innerHTML = '<div class="no-content">لا توجد أوراق متاحة لمرحلتك</div>';
+          return;
+        }
+        
+        // عرض الشيتات ككروت
+        examsSection.innerHTML = sheets.map((sheet, index) => `
+          <div class="sheet-card fade-in-up ${index > 0 ? `delay-${index}` : ''}">
+            <h3>${sheet.title}</h3>
+            <div class="sheet-info">
+              <span>المرحلة: ${sheet.grade_name}</span>
+              <span>التاريخ: ${sheet.created_at ? new Date(sheet.created_at).toLocaleDateString('ar-EG') : 'غير محدد'}</span>
+            </div>
+            <a href="/sheet/${sheet.id}" target="_blank" class="download-btn">
+              <i class="fas fa-download"></i> تحميل الورقة
+            </a>
+          </div>
+        `).join('');
+        
+      } catch (error) {
+        console.error('Error loading sheets:', error);
+        document.getElementById('examsSection').innerHTML = '<div class="no-content">خطأ في تحميل الأوراق</div>';
+      }
+    }
+
+    // تحميل الامتحانات الإلكترونية
+    async function loadOnlineExams() {
+      try {
+        const response = await fetch(`/api/online-exams?grade_id=${currentUserGrade}`);
+        const exams = await response.json();
+        const examsList = document.getElementById('onlineExamsList');
+        
+        if (exams.length === 0) {
+          examsList.innerHTML = '<div class="no-content">لا توجد امتحانات إلكترونية متاحة لمرحلتك</div>';
+          return;
+        }
+        
+        // عرض الامتحانات ككروت
+        examsList.innerHTML = exams.map((exam, index) => `
+          <div class="exam-card fade-in-up ${index > 0 ? `delay-${index}` : ''}">
+            <div class="exam-icon">
+              <i class="fas fa-laptop"></i>
+            </div>
+            <h3>${exam.title}</h3>
+            <div class="exam-info">
+              <span><i class="fas fa-clock"></i> المدة: ${exam.duration} دقيقة</span>
+              <span><i class="fas fa-question-circle"></i> الأسئلة: ${exam.total_questions}</span>
+              <span><i class="fas fa-calendar"></i> التاريخ: ${new Date(exam.created_at).toLocaleDateString('ar-EG')}</span>
+            </div>
+            <a href="/exam?exam_id=${exam.id}" class="start-exam-btn">
+              <i class="fas fa-play"></i> بدء الامتحان
+            </a>
+          </div>
+        `).join('');
+        
+      } catch (error) {
+        console.error('Error loading online exams:', error);
+        document.getElementById('onlineExamsList').innerHTML = '<div class="no-content">خطأ في تحميل الامتحانات الإلكترونية</div>';
+      }
+    }
+
+    // Tabs functionality
+    const videosTab = document.getElementById('videosTab');
+    const examsTab = document.getElementById('examsTab');
+    const videosSection = document.getElementById('videosSection');
+    const examsSection = document.getElementById('examsSection');
+    const searchInput = document.getElementById('searchInput');
+
+    videosTab.onclick = function() {
+      videosTab.classList.add('active');
+      examsTab.classList.remove('active');
+      videosSection.style.display = '';
+      examsSection.style.display = 'none';
+      searchInput.placeholder = "Search videos...";
+    };
+    examsTab.onclick = function() {
+      examsTab.classList.add('active');
+      videosTab.classList.remove('active');
+      examsSection.style.display = '';
+      videosSection.style.display = 'none';
+      searchInput.placeholder = "Search exams or sheets...";
+    };
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+      const val = this.value.toLowerCase();
+      if (videosSection.style.display !== 'none') {
+        document.querySelectorAll('.video-card').forEach(card => {
+          const title = card.querySelector('h3').textContent.toLowerCase();
+          card.style.display = title.includes(val) ? '' : 'none';
+        });
+      } else {
+        document.querySelectorAll('.sheet-card').forEach(card => {
+          const title = card.querySelector('h3').textContent.toLowerCase();
+          const grade = card.querySelector('.sheet-info span:first-child').textContent.toLowerCase();
+          card.style.display = (title.includes(val) || grade.includes(val)) ? '' : 'none';
+        });
+      }
+    });
+
+    // جعل أيقونة البحث قابلة للضغط
+    document.querySelector('.fa-search').addEventListener('click', function() {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.focus();
+      
+      // إذا كان هناك نص في البحث، قم بتنفيذ البحث
+      if (searchInput.value.trim()) {
+        const val = searchInput.value.toLowerCase();
+        if (videosSection.style.display !== 'none') {
+          document.querySelectorAll('.video-card').forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            card.style.display = title.includes(val) ? '' : 'none';
+          });
+        } else {
+          document.querySelectorAll('.sheet-card').forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const grade = card.querySelector('.sheet-info span:first-child').textContent.toLowerCase();
+            card.style.display = (title.includes(val) || grade.includes(val)) ? '' : 'none';
+          });
+        }
+      }
+    });
+    
+    // بدء التطبيق
+    document.addEventListener('DOMContentLoaded', checkAuth);
+
+    // منع كليك يمين للطالب
+    // document.addEventListener('contextmenu', function(e) {
+    //   e.preventDefault();
+    // });
+  </script>
+</body>
+</html>

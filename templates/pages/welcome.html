@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="../../static/css/dashboard.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Rubik', 'Poppins', sans-serif;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .welcome-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(30, 60, 114, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-container h1 {
+            color: #1e3c72;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .welcome-container p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .code-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .code-input:focus {
+            outline: none;
+            border-color: #6dd5ed;
+            box-shadow: 0 0 15px rgba(109, 213, 237, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .submit-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .submit-button:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .message.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .message.error {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+        
+        .message.warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .current-code-info {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 15px;
+            border: none;
+            font-weight: 500;
+        }
+        
+        .current-code-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .current-code-info p {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .dashboard-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+        
+        .dashboard-link:hover {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+            color: white;
+        }
+        
+        .back-to-home {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 147, 176, 0.3);
+            z-index: 1000;
+        }
+        
+        .back-to-home:hover {
+            background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 147, 176, 0.4);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 0;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .welcome-container {
+                margin: 10px;
+                padding: 25px 15px;
+                max-width: calc(100% - 20px);
+                min-height: auto;
+            }
+            
+            .welcome-container h1 {
+                font-size: 1.6rem;
+                margin-bottom: 10px;
+            }
+            
+            .welcome-container p {
+                font-size: 0.95rem;
+                margin-bottom: 15px;
+            }
+            
+            .code-input {
+                max-width: 100%;
+                padding: 12px 15px;
+                font-size: 16px;
+                margin: 10px 0;
+            }
+            
+            .submit-button {
+                padding: 12px 25px;
+                font-size: 14px;
+                margin: 8px;
+            }
+            
+            .current-code-info {
+                margin: 15px 0;
+                padding: 12px;
+            }
+            
+            .current-code-info h3 {
+                font-size: 1rem;
+            }
+            
+            .current-code-info p {
+                font-size: 0.85rem;
+            }
+            
+            .dashboard-link {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+            
+            .back-to-home {
+                top: 10px;
+                left: 10px;
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .welcome-container {
+                margin: 5px;
+                padding: 20px 10px;
+                max-width: calc(100% - 10px);
+            }
+            
+            .welcome-container h1 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+            
+            .welcome-container p {
+                font-size: 0.85rem;
+                margin-bottom: 12px;
+            }
+            
+            .code-input {
+                padding: 10px 12px;
+                font-size: 14px;
+                margin: 8px 0;
+            }
+            
+            .submit-button {
+                padding: 10px 20px;
+                font-size: 12px;
+                margin: 6px;
+            }
+            
+            .current-code-info {
+                margin: 12px 0;
+                padding: 10px;
+            }
+            
+            .current-code-info h3 {
+                font-size: 0.9rem;
+            }
+            
+            .current-code-info p {
+                font-size: 0.8rem;
+            }
+            
+            .dashboard-link {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .back-to-home {
+                top: 5px;
+                left: 5px;
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .welcome-container {
+                margin: 2px;
+                padding: 15px 8px;
+                max-width: calc(100% - 4px);
+            }
+            
+            .welcome-container h1 {
+                font-size: 1.2rem;
+            }
+            
+            .welcome-container p {
+                font-size: 0.8rem;
+            }
+            
+            .code-input {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .submit-button {
+                padding: 8px 16px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body class="welcome-page">
+    <a href="{{ url_for('index') }}" class="back-to-home">
+        <i class="fas fa-home"></i>main page
+    </a>
+    
+    <div class="welcome-container">
+        <h1><i class="fas fa-user-check"></i> welcome to the dashboard </h1>
+        <p>please enter your activation code to continue to the educational content</p>
+        
+        <div id="currentCodeInfo" class="current-code-info" style="display: none;">
+            <h3><i class="fas fa-info-circle"></i> current code information</h3>
+            <p id="currentCodeText"></p>
+        </div>
+        
+        <input type="text" id="activationCode" class="code-input" placeholder="أدخل كود التفعيل " maxlength="8">
+        <button onclick="submitCode()" class="submit-button">
+            <i class="fas fa-key"></i>  activate code
+        </button>
+        <div id="message" class="message" style="display: none;"></div>
+    </div>
+
+    <script>
+        // التحقق من حالة الكود الحالي عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            checkCurrentCodeStatus();
+        });
+        
+        function checkCurrentCodeStatus() {
+            fetch('/api/check-code-status')
+                .then(response => response.json())
+                .then(data => {
+                    const currentCodeInfo = document.getElementById('currentCodeInfo');
+                    const currentCodeText = document.getElementById('currentCodeText');
+                    
+                    if (data.has_valid_code && !data.is_admin) {
+                        // المستخدم لديه كود صالح
+                        currentCodeInfo.style.display = 'block';
+                        // currentCodeInfo.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
+                        currentCodeInfo.style.color = 'white';
+                        
+                        if (data.days_remaining !== null) {
+                            if (data.days_remaining > 0) {
+                                currentCodeText.innerHTML = `<i class="fas fa-check-circle"></i> لديك كود صالح - متبقي ${data.days_remaining} يوم`;
+                            } else {
+                                currentCodeText.innerHTML = `<i class="fas fa-clock"></i> لديك كود صالح - ينتهي اليوم`;
+                            }
+                        } else {
+                            currentCodeText.innerHTML = `<i class="fas fa-check-circle"></i> لديك كود صالح`;
+                        }
+                        
+                        // إضافة زر للذهاب للداشبورد
+                        currentCodeText.innerHTML += '<br><a href="/dashboard" class="dashboard-link"><i class="fas fa-tachometer-alt"></i> اذهب للداشبورد</a>';
+                        
+                    } else if (!data.has_valid_code && !data.is_admin) {
+                        // المستخدم لا لديه كود صالح
+                        currentCodeInfo.style.display = 'block';
+                        // currentCodeInfo.style.background = 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)';
+                        currentCodeInfo.style.color = 'white';
+                        currentCodeText.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${data.message || 'يجب عليك إدخال كود صالح للوصول للداشبورد'}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking code status:', error);
+                });
+        }
+        
+        function submitCode() {
+            const code = document.getElementById('activationCode').value;
+            const messageDiv = document.getElementById('message');
+            
+            if (!code) {
+                messageDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> يرجى إدخال كود التفعيل';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+
+            // Send activation code to backend
+            fetch('/api/activate-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageDiv.innerHTML = '<i class="fas fa-check-circle"></i> تم التفعيل بنجاح! جارٍ إعادة التوجيه...';
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 2000);
+                } else {
+                    messageDiv.innerHTML = `<i class="fas fa-times-circle"></i> ${data.error || 'كود التفعيل غير صحيح. يرجى المحاولة مرة أخرى.'}`;
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> حدث خطأ في الاتصال بالخادم';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            });
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('activationCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitCode();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+body.login-page {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  animation: fadeBackground 5s infinite alternate;
+}
+
+
+@keyframes fadeBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+body.login-page {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  /* خلفية متدرجة */
+  background: linear-gradient(-45deg, #2193b0, #6dd5ed, #1e3c72, #2a5298);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease-in-out infinite;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* إخفاء الخط تحت جميع الروابط المطلوبة */
+.register-link a,
+.forgot-password a,
+.terms a {
+  text-decoration: none;
+  border-bottom: none;
+  color: #2196f3;
+  transition: color 0.2s;
+}
+.register-link a:hover,
+.forgot-password a:hover,
+.terms a:hover {
+  color: #1565c0;
+}
+
+/* شكل العين عند إظهار الباسورد */
+.toggle-password .fa-eye-slash {
+  position: relative;
+}
+.toggle-password .fa-eye-slash::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  width: 18px;
+  height: 2px;
+  background: #d32f2f;
+  transform: rotate(-20deg);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* أنيميشن لتحريك الخلفية */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ...existing code... */
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 350px;
+  margin: 30px auto;
+  animation: popIn 1s ease-in-out;
+  box-sizing: border-box;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeInText 1.5s ease-in-out;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.input-animate ,
+select.input-animate {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 3px solid #ccc;
+  transition: all 0.3s ease;
+  animation: slideIn 1s ease forwards;
+}
+
+.input-animate:focus {
+  border-color: #0099ff;
+  box-shadow: 0 0 8px #0099ff3d;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.btn-animate {
+  width: 100%;
+  padding: 12px;
+  background-color: #0099ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  animation: bounceIn 1.2s ease forwards;
+}
+
+.btn-animate:hover {
+  background-color: #007acc;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  position: relative;
+}
+
+.password-wrapper .toggle-password {
+  position: absolute;
+  top: 40%;
+  right: 16px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 18px;
+  z-index: 2;
+}
+
+
+.input-animate {
+  width: 100%;
+  padding: 12px 44px 12px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #6dd5ed;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: rgba(255,255,255,0.18);
+  color: #222;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 18px 6px;
+    max-width: 98vw;
+    border-radius: 12px;
+  }
+  .fade-in {
+    font-size: 1.2rem;
+  }
+  .btn-animate {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
+
+/* Message styles */
+.message {
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  animation: slideIn 0.5s ease;
+}
+
+.message.success {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #4caf50;
+}
+
+.message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #f44336;
+}

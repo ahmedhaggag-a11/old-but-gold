@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Terms of Service & Privacy Policy - Knowledge Center</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/terms.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.jpg') }}">
+
+</head>
+<body class="login-page">
+  <div class="login-container" style="max-width:700px;">
+    <h2 class="fade-in">Terms of Service & Privacy Policy</h2>
+    <h3>Terms of Service</h3>
+    <ul>
+      <li>By using this website, you agree to follow all rules and respect other users.</li>
+      <li>Accounts are personal. Do not share your login information.</li>
+      <li>Any misuse or illegal activity will result in account suspension.</li>
+      <li>The center is not responsible for any external links or third-party content.</li>
+    </ul>
+    <h3>Privacy Policy</h3>
+    <ul>
+      <li>We collect your data (name, email, phone, academic year) only to provide our services.</li>
+      <li>Your data will not be shared with any third party without your consent.</li>
+      <li>You can request to update or delete your data at any time.</li>
+      <li>We use security measures to protect your information.</li>
+    </ul>
+    <p class="register-link"><a href="{{ url_for('auth.login_page') }}">Back to Login</a></p>
+  </div>
+</body>
+</html>
